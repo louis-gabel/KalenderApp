@@ -21,9 +21,15 @@ git clone <repository-url>
 Ensure the following software is installed:
 - [Node.js](https://nodejs.org/) (version 14 or higher)
 - [MariaDB](https://mariadb.org/) 
-
+- Knex: 
+```bash 
+npm install knex 
+```
+Adapt the passworts in the files to your locally db-root passwort:
+- database_setup.js
+- knexfile.js
+Follow this steps to create a test database:
 1. Create a test db with running the database_setup.js: 
--  need to adapt passwort in database_setup.js to root passwort before running the code
 ```bash
 node database_setup.js
 ```
@@ -35,3 +41,5 @@ npx knex migrate:latest --env development
 ```bash
 npx knex seed:run --env development
 ```
+### Starting the test REST-API
+Go to package.json and start debugging or start debugging over VSC (launch.json needed, create file with help of VSC). 
