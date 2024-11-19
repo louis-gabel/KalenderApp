@@ -8,7 +8,7 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-// Enable Cross-Origin Resource Sharing (CORS) for all routes (security feature)
+// Enable Cross-Origin Resource Sharing (CORS) for requests coming from http://localhost:3000 (the client)
 app.use(cors());
 // Parse incoming JSON requests and put the parsed data in req.body
 app.use(express.json());
