@@ -4,7 +4,7 @@ const authenticate = require("../middleware/authenticate");
 const checkRole = require("../middleware/checkRole");
 const router = express.Router(); // Create a new router object
 
-router.get("/", courseController.getCourses); // only authenticated users can see the courses
+router.get("/", authenticate, courseController.getCourses); // only authenticated users can see the courses
 router.post(
   "/",
   authenticate,

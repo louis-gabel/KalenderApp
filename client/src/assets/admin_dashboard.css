@@ -1,0 +1,50 @@
+.admin-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #034875;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.events-table th,
+.events-table td {
+  border: 1px solid #eee;
+  padding: 10px;
+  text-align: left;
+}
+
+.events-table th {
+  background-color: #034875;
+  color: #fff;
+}
+
+.events-table td button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  background-color: #034875;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.events-table td button:hover {
+  background-color: #022b57;
+}

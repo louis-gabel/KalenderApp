@@ -36,8 +36,12 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
-      // Redirects the user to the calendar view upon successful login
-      navigate("/calendar");
+      // Redirects the user based on their role
+      if (role === "Admin") {
+        navigate("/admin"); // Redirects the admin to the admin dahboard upon successful login
+      } else {
+        navigate("/calendar"); // Redirects the user to the calendar view upon successful login
+      }
     } catch (err) {
       // Sets an error message if the login fails
       setError("Invalid email or password.");

@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    titel: "",
     prename: "",
     surname: "",
     role: "Student",
+    password: "",
   });
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -37,6 +38,11 @@ const Register = () => {
     <div className="container">
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
+        <select name="titel" value={formData.titel} onChange={handleChange}>
+          <option value="">-</option>
+          <option value="Dr.">Dr.</option>
+          <option value="Prof.">Prof.</option>
+        </select>
         <input
           type="text"
           name="prename"
@@ -69,15 +75,20 @@ const Register = () => {
           onChange={handleChange}
           required
         />
-        <select name="role" value={formData.role} onChange={handleChange}>
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+          required
+        >
           <option value="Student">Student</option>
           <option value="Dozent">Dozent</option>
-          <option value="Admin">Admin</option>
         </select>
         <button type="submit">Register</button>
       </form>
       {success && <p className="success">{success}</p>}
       {error && <p className="error">{error}</p>}
+      <button onClick={() => navigate("/login")}>Back to Login</button>
     </div>
   );
 };
