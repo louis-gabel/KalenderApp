@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   // load events from the server
-  const fetchEvents = async () => {
+  const fetchCourses = async () => {
     try {
       const token = localStorage.getItem("token"); // Token for authentication
       const response = await axios.get(
@@ -25,13 +25,16 @@ const AdminDashboard = () => {
   };
 
   // delte an event from the server
-  const deleteEvent = async (eventId) => {
+  const deleteEvent = async (course_id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URL}/events/${eventId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setEvents(events.filter((event) => event.id !== eventId)); // Entfernt die gelöschte Veranstaltung
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/events/${course_id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setEvents(events.filter((event) => event.course_id !== course_id)); // Entfernt die gelöschte Veranstaltung
     } catch (err) {
       setError("Fehler beim Löschen der Veranstaltung.");
     }
@@ -39,8 +42,14 @@ const AdminDashboard = () => {
 
   // load events when the component is rendered
   useEffect(() => {
-    fetchEvents();
+    fetchCourses();
   }, []);
+
+  const confirmDelete = (eventId) => {
+    if (window.confirm("Möchten Sie diese Veranstaltung wirklich löschen?")) {
+      deleteEvent(eventId);
+    }
+  };
 
   return (
     <div className="admin-container">
@@ -50,22 +59,34 @@ const AdminDashboard = () => {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Category</th>
             <th>Titel</th>
-            <th>Datum</th>
             <th>Optionen</th>
           </tr>
         </thead>
         <tbody>
           {events.map((event) => (
-            <tr key={event.id}>
-              <td>{event.id}</td>
-              <td>{event.title}</td>
-              <td>{new Date(event.date).toLocaleDateString()}</td>
+            <tr key={event.course_id}>
+              <td>{event.course_id}</td>
+              <td>{event.category_id}</td>
               <td>
-                <button onClick={() => navigate(`/events/${event.id}`)}>
-                  Details
+                {event.title}
+                <br />
+                <span className="event-category">
+                  {"Beschreibung: " + event.description}
+                  <br />
+                  {"Maximale Studentenanzahl: " + event.max_participants}
+                  <br />
+                  {"Dauer: " + event.duration + " Stunden"}
+                </span>
+              </td>
+              <td>
+                <button onClick={() => navigate(`/events/${event.course_id}`)}>
+                  Bearbeiten
                 </button>
-                <button onClick={() => deleteEvent(event.id)}>Löschen</button>
+                <button onClick={() => confirmDelete(event.course_id)}>
+                  Löschen
+                </button>
               </td>
             </tr>
           ))}
