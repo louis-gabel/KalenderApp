@@ -36,3 +36,65 @@
     transform: rotate(360deg);
   }
 }
+
+/* Navbar: Grundlayout */
+.navbar {
+  display: flex;
+  align-items: center;
+  background-color: #333;
+  padding: 10px;
+  color: white;
+  position: relative;
+  z-index: 1000; /* Hoher z-Index, damit die Navigation oben bleibt */
+}
+
+/* Menübutton */
+.menu-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1001; /* Button bleibt immer sichtbar */
+}
+
+/* Versteckte Navigation standardmäßig */
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none; /* Standardmäßig versteckt */
+  flex-direction: column;
+  background-color: #444;
+  position: absolute;
+  top: 50px; /* Abstand vom oberen Rand */
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Sicherstellen, dass die Navigation oben ist */
+}
+
+/* Navigation sichtbar, wenn geöffnet */
+.nav-links.open {
+  display: flex;
+}
+
+/* Links formatieren */
+.nav-links li {
+  text-align: left;
+  padding: 10px 20px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: rgb(10, 0, 0);
+}
+
+.nav-links li a:hover {
+  text-decoration: underline;
+}
+
+/* Kalenderansicht */
+.calendar-container {
+  position: relative;
+  z-index: 0; /* Kalender bleibt hinter der Navigation */
+}

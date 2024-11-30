@@ -5,7 +5,9 @@ const cors = require("cors");
 // Import the Routes for handling requests to specific endpoints
 const courseRoutes = require("./routes/courseRoutes");
 const authRoutes = require("./routes/authRoutes");
-const calendarViewRoutes = require("./routes/calendarViewRoutes"); // Neue Routen importieren
+const calendarViewRoutes = require("./routes/calendarViewRoutes");
+const enrollmentRoutes = require("./routes/enrollmentRoutes");
+
 
 const app = express();
 
@@ -16,9 +18,11 @@ app.use(cors());
 app.use(express.json());
 
 // Use the Routes for handling requests to specific endpoints
-app.use("/api/events", courseRoutes);
+app.use("/api/courses", courseRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/calendar", calendarViewRoutes); // Neue Routen hinzufügen
+app.use("/api/calendar", calendarViewRoutes);
+app.use("/api/enrollment", enrollmentRoutes);
+
 
 // Define the port number from environment variables
 const PORT = process.env.BACKEND_PORT;
