@@ -13,7 +13,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token"); // Token for authentication
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/events`,
+        `${process.env.REACT_APP_API_URL}/courses`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `${process.env.REACT_APP_API_URL}/events/${course_id}`,
+        `${process.env.REACT_APP_API_URL}/courses/${course_id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
                 </span>
               </td>
               <td>
-                <button onClick={() => navigate(`/events/${event.course_id}`)}>
+                <button onClick={() => navigate(`/courses/${event.course_id}`)}>
                   Bearbeiten
                 </button>
                 <button onClick={() => confirmDelete(event.course_id)}>

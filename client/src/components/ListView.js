@@ -1,8 +1,7 @@
 // src/components/ListView.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import './ListView.css';
-
+import "../assets/ListView.css";
 
 function ListView() {
   const [events, setEvents] = useState([]);

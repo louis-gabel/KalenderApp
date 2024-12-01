@@ -1,14 +1,14 @@
 import React from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import "./YearView.css";
+import "../assets/YearView.css";
 
 function YearView({ events, onMonthClick }) {
   // Berechnet die Monate im Jahr und teilt Events nach Monaten auf
   const months = Array.from({ length: 12 }, (_, i) => {
     // Korrekte Erstellung des Monatsstarts
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), i+1, 0); // Monat korrekt 0-basiert
+    const monthStart = new Date(now.getFullYear(), i + 1, 0); // Monat korrekt 0-basiert
     return monthStart; // Startdatum jedes Monats
   });
 
@@ -29,10 +29,10 @@ function YearView({ events, onMonthClick }) {
     <div className="year-grid">
       {eventsByMonth.map((monthData, index) => (
         <div
-        className="month-tile"
-        key={index}
-        //onClick={() => onMonthClick(monthData.monthStart)} // Monat anklicken, um die Monatsansicht zu sehen
-      >
+          className="month-tile"
+          key={index}
+          //onClick={() => onMonthClick(monthData.monthStart)} // Monat anklicken, um die Monatsansicht zu sehen
+        >
           {/* Anzeige des Monats mit Jahr */}
           <h3>
             {monthData.monthStart.toLocaleString("default", { month: "long" })}{" "}
