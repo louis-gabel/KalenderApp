@@ -40,7 +40,7 @@ function Calendar() {
       return (
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView={view === "week" ? "timeGridWeek" : view === "month" ? "dayGridMonth" : "listWeek"} // Ansicht je nach Status
+          initialView={view === "day" ? "timeGridDay" : view === "week" ? "timeGridWeek" : view === "month" ? "dayGridMonth" : "listWeek"} // Ansicht je nach Status
           key={view} // Neu-Rendern bei Ansichtwechsel erzwingen
           firstDay={1} // Woche startet am Montag
           aspectRatio={2.7}
@@ -72,6 +72,7 @@ function Calendar() {
     <div>
       <div className="view-buttons">
         <button onClick={() => navigate("/list")}>List</button> {/* Navigiert zu /list */}
+        <button onClick={() => setView("day")}>Day</button>
         <button onClick={() => setView("week")}>Week</button>
         <button onClick={() => setView("month")}>Month</button>
         <button onClick={() => setView("year")}>Year</button>

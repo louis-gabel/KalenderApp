@@ -1,23 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const enrollmentController = require("../controllers/enrollmentController");
-const authMiddleware = require("../middleware/authenticate"); // Middleware für Authentifizierung
+const authenticate = require("../middleware/authenticate");
 
 // Route: Abrufen aller zukünftigen Sessions
-//router.get("/upcoming", authMiddleware, enrollmentController.getUpcomingSessions);
-router.get("/upcoming", enrollmentController.getUpcomingSessions);
+router.get("/upcoming", 
+    authenticate,
+    enrollmentController.getUpcomingSessions);
 
 // Route: Anmeldung zu einer Session
-//router.post("/enroll", authMiddleware, enrollmentController.enrollInSession);
-router.post("/enroll", enrollmentController.enrollInSession);
+router.post("/enroll", 
+    authenticate,
+    enrollmentController.enrollInSession);
 
 // Route: Abrufen aller Registrierungen eines Benutzers
-//router.get("/my-enrollments", authMiddleware, enrollmentController.getUserEnrollments);
-router.get("/my-enrollments", enrollmentController.getUserEnrollments);
+router.get("/my-enrollments", 
+    authenticate,
+    enrollmentController.getUserEnrollments);
 
 
 // Route: Abmeldung von einer Session
-//router.post("/withdraw", authMiddleware, enrollmentController.withdrawFromSession);
-router.post("/withdraw", enrollmentController.withdrawFromSession);
+router.post("/withdraw", 
+    authenticate,
+    enrollmentController.withdrawFromSession);
 
 module.exports = router;

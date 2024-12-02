@@ -1,10 +1,24 @@
 const db = require("../utils/db"); // Importiere die Knex.js-Datenbankverbindung
 
-// Funktion zum Abrufen von Kalendereinträgen
-const getCalendarEvents = async () => {
+// Funktion zum Abrufen von Kalendereinträgen mit erweiterten Feldern
+const getCalendarEvents = async (userId) => {
   try {
-    const events = await db("calendarevent") // Tabellenname
-      .select("event_id", "start_time", "end_time", "room_id"); // Spalten auswählen
+    const events = await db("calendarevent")
+      .join("coursesessions", "calendarevent.event_id", "=", "coursesessions.event_id")
+      .join("user", "coursesessions.teacher_id", "=", "user.user_id") // Join über teacher_id
+      .join("room", "calendarevent.room_id", "=", "room.room_id") // Join über room_id
+      .join("course", "coursesessions.course_id", "=", "course.course_id") // Join über course_id
+      .select(
+        "calendarevent.event_id",
+        "calendarevent.start_time",
+        "calendarevent.end_time",
+        "user.surname as teacher_surname", // Lehrer-Nachname
+        "room.room_name", // Raumname
+        "course.title as course_title", // Kursname
+        "course.description as course_description" // Kursbeschreibung
+      )
+      .where("calendarevent.user_id", userId); // Nur Events des spezifischen Benutzers abrufen
+
     return events;
   } catch (error) {
     console.error("Error fetching calendar events:", error);
