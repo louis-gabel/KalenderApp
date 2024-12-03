@@ -50,3 +50,28 @@ h1 {
 .events-table td button:hover {
   background-color: #022b57;
 }
+
+.create-course-form {
+  margin-bottom: 20px;
+}
+
+.create-course-form input,
+.create-course-form textarea {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.create-course-form button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.create-course-form button:hover {
+  background-color: #45a049;
+}
