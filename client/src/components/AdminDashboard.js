@@ -5,8 +5,10 @@ import "../assets/admin_dashboard.css"; // own CSS file
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]); // list of events
-  const [categories, setCategories] = useState([]); // Liste der Kategorien
+  const [categories, setCategories] = useState([]); // list of categories
   const [error, setError] = useState(""); // error message
+  const [dozents, setDozents] = useState([]); // list of dozents
+
   const navigate = useNavigate();
 
   const [newCourse, setNewCourse] = useState({
@@ -20,28 +22,41 @@ const AdminDashboard = () => {
   // API URL
   const API_URL = process.env.REACT_APP_API_URL;
 
-  // Fetch-Kurse Funktion in useCallback umhüllen, um unnötige Neurender zu verhindern
+  // Wrap fetchCourses function in useCallback to prevent unnecessary re-renders
   const fetchCourses = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token"); // Token für Authentifizierung
+      const token = localStorage.getItem("token"); // Token for authentication
       const response = await axios.get(`${API_URL}/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setEvents(response.data); // Geladene Kurse setzen
+      setEvents(response.data); // Set loaded courses
     } catch (err) {
-      setError("Fehler beim Laden der Veranstaltungen.");
+      setError("Error loading events.");
     }
   }, [API_URL]);
 
   const fetchCategories = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token"); // Token für Authentifizierung
+      const token = localStorage.getItem("token"); // Token for authentication
       const response = await axios.get(`${API_URL}/category`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCategories(response.data); // Geladene Kategorien setzen
+      setCategories(response.data); // Set loaded categories
     } catch (err) {
-      setError("Fehler beim Laden der Kategorien.");
+      setError("Error loading categories.");
+    }
+  }, [API_URL]);
+
+  // load dozents
+  const fetchDozents = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token"); // Token for authentication
+      const response = await axios.get(`${API_URL}/user/dozent`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDozents(response.data); // Set loaded dozents
+    } catch (err) {
+      setError("Error loading dozents.");
     }
   }, [API_URL]);
 
@@ -82,18 +97,19 @@ const AdminDashboard = () => {
     }
   };
 
-  // Bestätigung vor dem Löschen eines Kurses
+  // Confirmation before deleting a course
   const confirmDelete = (eventId) => {
-    if (window.confirm("Möchten Sie diese Veranstaltung wirklich löschen?")) {
+    if (window.confirm("Are you sure you want to delete this event?")) {
       deleteEvent(eventId);
     }
   };
 
-  // Lädt Kurse bei der ersten Rendern des Components
+  // Load courses on the first render of the component
   useEffect(() => {
     fetchCourses();
-    fetchCategories(); // Kategorien beim Rendern laden
-  }, [fetchCourses, fetchCategories]);
+    fetchCategories(); // Load categories on render
+    fetchDozents(); // Load dozents on render
+  }, [fetchCourses, fetchCategories, fetchDozents]);
 
   return (
     <div className="admin-container">
@@ -115,7 +131,7 @@ const AdminDashboard = () => {
               <td>{event.course_id}</td>
               <td>
                 {categories.find((cat) => cat.category_id === event.category_id)
-                  ?.category_name || "Unbekannt"}
+                  ?.category_name || "Unknown"}
               </td>
               <td>
                 {event.title}
@@ -141,13 +157,13 @@ const AdminDashboard = () => {
         </tbody>
       </table>
 
-      {/* Formular für das Hinzufügen eines neuen Kurses */}
+      {/* Form for adding a new course */}
       <div className="create-course-form">
-        <h2>Neuen Kurs hinzufügen</h2>
+        <h2>Add New Course</h2>
         <form onSubmit={createCourse}>
           <input
             type="text"
-            placeholder="Titel"
+            placeholder="Title"
             value={newCourse.title}
             onChange={(e) =>
               setNewCourse({ ...newCourse, title: e.target.value })
@@ -155,7 +171,7 @@ const AdminDashboard = () => {
             required
           />
           <textarea
-            placeholder="Beschreibung"
+            placeholder="Description"
             value={newCourse.description}
             onChange={(e) =>
               setNewCourse({ ...newCourse, description: e.target.value })
@@ -164,7 +180,7 @@ const AdminDashboard = () => {
           />
           <input
             type="number"
-            placeholder="Maximale Teilnehmerzahl"
+            placeholder="Max Participants"
             value={newCourse.max_participants}
             onChange={(e) =>
               setNewCourse({ ...newCourse, max_participants: e.target.value })
@@ -173,14 +189,14 @@ const AdminDashboard = () => {
           />
           <input
             type="number"
-            placeholder="Dauer (in Stunden)"
+            placeholder="Duration (in hours)"
             value={newCourse.duration}
             onChange={(e) =>
               setNewCourse({ ...newCourse, duration: e.target.value })
             }
             required
           />
-          {/* Dropdown für Kategorien */}
+          {/* Dropdown for categories */}
           <select
             value={newCourse.category_id}
             onChange={(e) =>
@@ -188,14 +204,29 @@ const AdminDashboard = () => {
             }
             required
           >
-            <option value="">Kategorie auswählen</option>
+            <option value="">Select Category</option>
             {categories.map((category) => (
               <option key={category.category_id} value={category.category_id}>
                 {category.category_name}
               </option>
             ))}
           </select>
-          <button onClick={createCourse}>Kurs erstellen</button>
+          {/* Dropdown for dozents */}
+          <select
+            value={newCourse.user_id}
+            onChange={(e) =>
+              setNewCourse({ ...newCourse, user_id: e.target.value })
+            }
+            required
+          >
+            <option value="">Select dozent who teaches this course</option>
+            {dozents.map((user) => (
+              <option key={user.user_id} value={user.user_id}>
+                {user.prename + " " + user.surname}
+              </option>
+            ))}
+          </select>
+          <button onClick={createCourse}>Create Course</button>
         </form>
       </div>
     </div>

@@ -5,6 +5,7 @@ const cors = require("cors");
 // Import the Routes for handling requests to specific endpoints
 const courseRoutes = require("./routes/courseRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const calendarViewRoutes = require("./routes/calendarViewRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
@@ -20,6 +21,7 @@ app.use(express.json());
 // Use the Routes for handling requests to specific endpoints
 app.use("/api/courses", courseRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/calendar", calendarViewRoutes);
 app.use("/api/enrollment", enrollmentRoutes);
 app.use("/api/category", categoryRoutes);
