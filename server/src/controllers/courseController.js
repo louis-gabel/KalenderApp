@@ -15,9 +15,13 @@ const createCourse = async (req, res) => {
     // Extract course data from the request body
     const course = req.body;
     // Call the model function to create a new course in the database
-    await courseModel.createCourse(course);
+    const newCourse = await courseModel.createCourse(course);
+
+    const newCourseId = newCourse[0];
     // Send a success response with status code 201 (Created)
-    res.status(201).json({ message: "Course created successfully" });
+    res
+      .status(201)
+      .json({ course_id: newCourseId, message: "Course created successfully" });
   } catch (error) {
     // Send an error response with status code 500 (Internal Server Error)
     res.status(500).json({ message: error.message });

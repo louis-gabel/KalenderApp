@@ -7,7 +7,8 @@ const AdminDashboard = () => {
   const [events, setEvents] = useState([]); // list of events
   const [categories, setCategories] = useState([]); // list of categories
   const [error, setError] = useState(""); // error message
-  const [dozents, setDozents] = useState([]); // list of dozents
+  const [selectedTeachers, setSelectedTeachers] = useState([""]); // list of selected teachers for course
+  const [teachers, setTeachers] = useState([]); // List of all teachers
 
   const navigate = useNavigate();
 
@@ -48,29 +49,42 @@ const AdminDashboard = () => {
   }, [API_URL]);
 
   // load dozents
-  const fetchDozents = useCallback(async () => {
+  const fetchTeacher = useCallback(async () => {
     try {
       const token = localStorage.getItem("token"); // Token for authentication
       const response = await axios.get(`${API_URL}/user/dozent`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setDozents(response.data); // Set loaded dozents
+      setTeachers(response.data); // Set loaded dozents
     } catch (err) {
-      setError("Error loading dozents.");
+      setError("Error loading teachers.");
     }
   }, [API_URL]);
 
   const createCourse = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        `${API_URL}/courses`,
-        newCourse, // course data
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      // Create course
+      const courseResponse = await axios.post(`${API_URL}/courses`, newCourse, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const courseId = courseResponse.data.course_id; // ID of the created course
+
+      // create realtions in teachercourse table
+      await Promise.all(
+        selectedTeachers.map((id) =>
+          axios.post(
+            `${API_URL}/teachercourse/create`,
+            { user_id: id, course_id: courseId },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+        )
       );
-      // Successfully created: reload course list
+
+      // suuccessfully created: reload course list
       fetchCourses();
       setNewCourse({
         title: "",
@@ -78,9 +92,10 @@ const AdminDashboard = () => {
         category_id: "",
         max_participants: "",
         duration: "",
-      }); // reset form
+      });
+      setSelectedTeachers([""]); // reset of teacher selection
     } catch (err) {
-      setError("Error creating course.");
+      setError("Error while creating course.");
     }
   };
 
@@ -104,12 +119,22 @@ const AdminDashboard = () => {
     }
   };
 
+  const addTeacherField = () => {
+    setSelectedTeachers([...selectedTeachers, ""]);
+  };
+
+  const updateTeacher = (index, value) => {
+    const updatedTeachers = [...selectedTeachers];
+    updatedTeachers[index] = value;
+    setSelectedTeachers(updatedTeachers);
+  };
+
   // Load courses on the first render of the component
   useEffect(() => {
     fetchCourses();
     fetchCategories(); // Load categories on render
-    fetchDozents(); // Load dozents on render
-  }, [fetchCourses, fetchCategories, fetchDozents]);
+    fetchTeacher(); // Load dozents on render
+  }, [fetchCourses, fetchCategories, fetchTeacher]);
 
   return (
     <div className="admin-container">
@@ -212,21 +237,26 @@ const AdminDashboard = () => {
             ))}
           </select>
           {/* Dropdown for dozents */}
-          <select
-            value={newCourse.user_id}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, user_id: e.target.value })
-            }
-            required
-          >
-            <option value="">Select dozent who teaches this course</option>
-            {dozents.map((user) => (
-              <option key={user.user_id} value={user.user_id}>
-                {user.prename + " " + user.surname}
-              </option>
-            ))}
-          </select>
-          <button onClick={createCourse}>Create Course</button>
+          {selectedTeachers.map((teacher, index) => (
+            <select
+              key={index}
+              value={teacher}
+              onChange={(e) => updateTeacher(index, e.target.value)}
+              required
+            >
+              <option value="">Select course teacher</option>
+              {teachers.map((dozent) => (
+                <option key={dozent.user_id} value={dozent.user_id}>
+                  {dozent.prename + " " + dozent.surname}
+                </option>
+              ))}
+            </select>
+          ))}
+          <button type="button" onClick={addTeacherField}>
+            Add further teacher
+          </button>
+
+          <button>Create Course</button>
         </form>
       </div>
     </div>
