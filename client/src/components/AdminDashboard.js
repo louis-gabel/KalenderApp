@@ -23,6 +23,13 @@ const AdminDashboard = () => {
   // API URL
   const API_URL = process.env.REACT_APP_API_URL;
 
+  const logout = () => {
+    // Entfernen des Tokens aus dem localStorage
+    localStorage.removeItem("token");
+
+    // Umleitung zur Login-Seite
+    window.location.href = "/login";
+  };
   // Wrap fetchCourses function in useCallback to prevent unnecessary re-renders
   const fetchCourses = useCallback(async () => {
     try {
@@ -140,7 +147,7 @@ const AdminDashboard = () => {
     <div className="admin-container">
       <h1>Admin Dashboard</h1>
       {error && <p className="error">{error}</p>}
-
+      <button onClick={logout}>Logout</button>
       <table className="events-table">
         <thead>
           <tr>
@@ -170,7 +177,7 @@ const AdminDashboard = () => {
                 </span>
               </td>
               <td>
-                <button onClick={() => navigate(`/courses/${event.course_id}`)}>
+                <button onClick={() => navigate(`/admin/${event.course_id}`)}>
                   Edit
                 </button>
                 <button onClick={() => confirmDelete(event.course_id)}>
@@ -181,7 +188,6 @@ const AdminDashboard = () => {
           ))}
         </tbody>
       </table>
-
       {/* Form for adding a new course */}
       <div className="create-course-form">
         <h2>Add New Course</h2>

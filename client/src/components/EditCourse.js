@@ -139,6 +139,7 @@ const EditCourse = () => {
     <div className="edit-course-container">
       <h1>Edit Course </h1>
       {error && <p className="error">{error}</p>}
+      <button onClick={() => navigate("/admin")}>CancelEdit</button>
 
       <form onSubmit={(e) => e.preventDefault()}>
         <input

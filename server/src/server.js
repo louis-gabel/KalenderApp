@@ -10,6 +10,7 @@ const calendarViewRoutes = require("./routes/calendarViewRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const teachercourseRoutes = require("./routes/teachercourseRoutes");
+const coursesessionRoutes = require("./routes/coursessionRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/calendar", calendarViewRoutes);
 app.use("/api/enrollment", enrollmentRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/teachercourse", teachercourseRoutes);
+app.use("/api/coursesessions", coursesessionRoutes);
 
 // Define the port number from environment variables
 const PORT = process.env.BACKEND_PORT;

@@ -5,6 +5,7 @@ import {
   Route,
   Link,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import Calendar from "./components/Calendar";
 import ListView from "./components/ListView";
@@ -16,6 +17,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import AdminDashboard from "./components/AdminDashboard";
 import EditCourse from "./components/EditCourse";
+import DozentDashboard from "./components/DozentDashboard";
 
 import "./assets/App.css";
 
@@ -46,13 +48,21 @@ function App() {
 
   const toggleMenu = () => setMenuOpen(!menuOpen); // Menü öffnen/schließen
 
+  const location = useLocation(); // Holt den aktuellen Pfad
+
+  // Definiere, auf welchen URLs die Navigation ausgeblendet werden soll
+  const hiddenNavPaths = ["/login", "/register", "/admin", "/dozent"];
+  const hideNav =
+    hiddenNavPaths.some((path) => location.pathname.startsWith(path)) ||
+    location.pathname.startsWith("/admin");
+
   return (
-    <Router>
-      <div>
-        {/* Navigation nur anzeigen, wenn der Benutzer eingeloggt ist */}
+    <div>
+      {/* Navigation nur anzeigen, wenn der Pfad nicht versteckt ist */}
+      {!hideNav && (
         <nav className="navbar">
           <button className="menu-button" onClick={toggleMenu}>
-            ☰ {/* Menü-Icon */}
+            ☰
           </button>
           <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
             <li>
@@ -71,11 +81,6 @@ function App() {
               </Link>
             </li>
             <li>
-              <Link to="/help" onClick={toggleMenu}>
-                Help
-              </Link>
-            </li>
-            <li>
               <Link
                 to="/login"
                 onClick={() => {
@@ -88,49 +93,59 @@ function App() {
             </li>
           </ul>
         </nav>
-        {/* Routen */}
-        <Routes>
-          {/* Allgemeine Routen, die keine Authentifizierung erfordern */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/help" element={<HelpSite />} />
+      )}
+      {/* Routen */}
+      <Routes>
+        {/* Allgemeine Routen, die keine Authentifizierung erfordern */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/help" element={<HelpSite />} />
 
-          {/* Geschützte Routen, die nur mit Authentifizierung zugänglich sind */}
-          <Route
-            path="/calendar"
-            element={<ProtectedRoute element={<Calendar />} />}
-          />
-          <Route
-            path="/sessions"
-            element={<ProtectedRoute element={<CourseSessionList />} />}
-          />
-          <Route
-            path="/courses"
-            element={<ProtectedRoute element={<CourseList apiUrl={API} />} />}
-          />
-          <Route
-            path="/admin"
-            element={<ProtectedRoute element={<AdminDashboard />} />}
-          />
-          <Route
-            path="/list"
-            element={<ProtectedRoute element={<ListView />} />}
-          />
-          <Route
-            path="/enroll/:sessionId"
-            element={<ProtectedRoute element={<EnrollPage />} />}
-          />
-          <Route
-            path="/courses/:courseId"
-            element={<ProtectedRoute element={<EditCourse />} />}
-          />
-          {/* Default Route */}
-          <Route path="/" element={<Navigate to="/calendar" replace />} />
-          <Route path="*" element={<div>404 Not Found</div>} />
-        </Routes>
-      </div>
-    </Router>
+        {/* Geschützte Routen, die nur mit Authentifizierung zugänglich sind */}
+        <Route
+          path="/calendar"
+          element={<ProtectedRoute element={<Calendar />} />}
+        />
+        <Route
+          path="/sessions"
+          element={<ProtectedRoute element={<CourseSessionList />} />}
+        />
+        <Route
+          path="/courses"
+          element={<ProtectedRoute element={<CourseList apiUrl={API} />} />}
+        />
+        <Route
+          path="/admin"
+          element={<ProtectedRoute element={<AdminDashboard />} />}
+        />
+        <Route
+          path="/dozent"
+          element={<ProtectedRoute element={<DozentDashboard />} />}
+        />
+        <Route
+          path="/list"
+          element={<ProtectedRoute element={<ListView />} />}
+        />
+        <Route
+          path="/enroll/:sessionId"
+          element={<ProtectedRoute element={<EnrollPage />} />}
+        />
+        <Route
+          path="/admin/:courseId"
+          element={<ProtectedRoute element={<EditCourse />} />}
+        />
+        {/* Default Route */}
+        <Route path="/" element={<Navigate to="/calendar" replace />} />
+        <Route path="*" element={<div>404 Not Found</div>} />
+      </Routes>
+    </div>
   );
 }
 
-export default App;
+export default function Root() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}

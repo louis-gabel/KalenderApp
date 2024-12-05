@@ -23,7 +23,8 @@ const getAllTeachersOfCourse = async (req, res) => {
 
 const getAllCoursesOfTeacher = async (req, res) => {
   try {
-    const courses = await teachercourseModel.getAllCoursesOfTeacher(req.query);
+    const { id } = req.params;
+    const courses = await teachercourseModel.getAllCoursesOfTeacher(id);
     res.status(200).json(courses);
   } catch (error) {
     res.status(500).json({ message: error.message });
