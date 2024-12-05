@@ -4,14 +4,16 @@ const db = require("../utils/db"); // Importiere die Knex.js-Datenbankverbindung
 const getCalendarEvents = async (userId) => {
   try {
     const events = await db("calendarevent")
-      .join("coursesessions", "calendarevent.event_id", "=", "coursesessions.event_id")
-      .join("user", "coursesessions.teacher_id", "=", "user.user_id") // Join über teacher_id
+      .join("coursesession", "calendarevent.session_id", "=", "coursesession.session_id")
+      .join("user", "coursesession.teacher_id", "=", "user.user_id") // Join über teacher_id
       .join("room", "calendarevent.room_id", "=", "room.room_id") // Join über room_id
-      .join("course", "coursesessions.course_id", "=", "course.course_id") // Join über course_id
+      .join("course", "coursesession.course_id", "=", "course.course_id") // Join über course_id
       .select(
         "calendarevent.event_id",
         "calendarevent.start_time",
         "calendarevent.end_time",
+        "user.titel as teacher_title", // Lehrer-Titel
+        "user.prename as teacher_prename", // Lehrer-Vorname
         "user.surname as teacher_surname", // Lehrer-Nachname
         "room.room_name", // Raumname
         "course.title as course_title", // Kursname
