@@ -30,15 +30,18 @@ const Login = () => {
     try {
       // Calls the loginUser function with email and password to authenticate the user
       const response = await loginUser({ email, password });
-      const { token, role } = response.data; // Destructures the token and role from the response
+      const { token, role, id } = response.data; // Destructures the token and role from the response
 
       // Stores the token and role in localStorage for future authenticated requests
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+      localStorage.setItem("id", id);
 
       // Redirects the user based on their role
       if (role === "Admin") {
         navigate("/admin"); // Redirects the admin to the admin dahboard upon successful login
+      } else if (role === "Dozent") {
+        navigate("/dozent"); // Redirects the dozent to the course view upon successful login
       } else {
         navigate("/calendar"); // Redirects the user to the calendar view upon successful login
       }

@@ -53,15 +53,22 @@ const login = async (req, res) => {
 
     // create a JWT token with user ID and role ID
     const token = jwt.sign(
-      { id: user.user_id, role: user.role_id, role_id: role.role_id },
+      {
+        id: user.user_id,
+        role: user.role_id,
+        role_id: role.role_id,
+      },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
       }
     );
-    res
-      .status(200)
-      .json({ token, role: role.role_name, role_id: role.role_id });
+    res.status(200).json({
+      token,
+      role: role.role_name,
+      role_id: role.role_id,
+      id: user.user_id,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
