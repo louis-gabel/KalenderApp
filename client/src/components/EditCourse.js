@@ -137,7 +137,7 @@ const EditCourse = () => {
 
   return (
     <div className="edit-course-container">
-      <h1>Edit Course</h1>
+      <h1>Edit Course </h1>
       {error && <p className="error">{error}</p>}
 
       <form onSubmit={(e) => e.preventDefault()}>
