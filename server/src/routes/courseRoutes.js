@@ -6,6 +6,8 @@ const router = express.Router(); // Create a new router object
 
 router.get("/", authenticate, courseController.getCourses); // only authenticated users can see the courses
 
+router.get("/:id", authenticate, courseController.getSpecificCourse); // only authenticated users can see the courses
+
 router.post("/", authenticate, checkRole([1]), courseController.createCourse); // only admin/dozent can create a course
 
 router.put("/:id", authenticate, checkRole([1]), courseController.updateCourse); // only admin/dozent can update a course

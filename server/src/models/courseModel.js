@@ -4,6 +4,10 @@ const getCourses = async (filters = {}) => {
   return db("course").where(filters).select("*");
 };
 
+const getSpecificCourse = async (id) => {
+  return db("course").where({ course_id: id }).select("*");
+};
+
 const createCourse = async (data) => {
   return db("course").insert(data);
 };
@@ -18,6 +22,7 @@ const deleteCourse = async (id) => {
 
 module.exports = {
   getCourses,
+  getSpecificCourse,
   createCourse,
   updateCourse,
   deleteCourse,

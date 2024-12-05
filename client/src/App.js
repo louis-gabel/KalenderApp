@@ -15,6 +15,8 @@ import CourseList from "./components/CourseList";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AdminDashboard from "./components/AdminDashboard";
+import EditCourse from "./components/EditCourse";
+
 import "./assets/App.css";
 
 const API = process.env.REACT_APP_API_URL;
@@ -118,7 +120,10 @@ function App() {
             path="/enroll/:sessionId"
             element={<ProtectedRoute element={<EnrollPage />} />}
           />
-
+          <Route
+            path="/courses/:courseId"
+            element={<ProtectedRoute element={<EditCourse />} />}
+          />
           {/* Default Route */}
           <Route path="/" element={<Navigate to="/calendar" replace />} />
           <Route path="*" element={<div>404 Not Found</div>} />

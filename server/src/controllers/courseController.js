@@ -2,8 +2,20 @@ const courseModel = require("../models/courseModel");
 
 const getCourses = async (req, res) => {
   try {
+    const filters = {}; // create filter object
     const courses = await courseModel.getCourses(req.query);
     res.status(200).json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getSpecificCourse = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const course = await courseModel.getSpecificCourse(id);
+    // Send a success response with status code 200 (OK)
+    res.status(200).json(course);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -57,6 +69,7 @@ const deleteCourse = async (req, res) => {
 
 module.exports = {
   getCourses,
+  getSpecificCourse,
   createCourse,
   updateCourse,
   deleteCourse,

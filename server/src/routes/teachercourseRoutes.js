@@ -7,13 +7,13 @@ const router = express.Router();
 router.get("/", authenticate, teachercourseController.getAllTeachersCourses);
 
 router.get(
-  "/teacher",
+  "/teacher/:id",
   authenticate,
   teachercourseController.getAllTeachersOfCourse
 );
 
 router.get(
-  "/courses",
+  "/courses/:id",
   authenticate,
   teachercourseController.getAllCoursesOfTeacher
 );
@@ -26,14 +26,14 @@ router.post(
 );
 
 router.put(
-  "/update",
+  "/update/:id",
   authenticate,
   checkRole([1]),
   teachercourseController.updateTeacherCourse
 );
 
 router.delete(
-  "/delete",
+  "/delete/:id",
   authenticate,
   checkRole([1]),
   teachercourseController.deleteTeacherCourse

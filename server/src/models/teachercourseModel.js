@@ -5,11 +5,11 @@ const getAllTeachersCourse = async (filters = {}) => {
 };
 
 const getAllTeachersOfCourse = async (course_id) => {
-  return db("teachercourse").where("course_id", course_id).select("*");
+  return db("teachercourse").where({ course_id: course_id }).select("*");
 };
 
 const getAllCoursesOfTeacher = async (user_id) => {
-  return db("teachercourse").where("user_id", user_id).select("*");
+  return db("teachercourse").where({ user_id: user_id }).select("*");
 };
 
 const createTeacherCourse = async (data) => {
