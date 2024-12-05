@@ -72,6 +72,28 @@ const EditCourse = () => {
     try {
       const token = localStorage.getItem("token");
 
+      // Delete all existing teacher course relationships first
+      if (oldTeachercourses.length > 0) {
+        for (let teacher_course_id of oldTeachercourses) {
+          await axios.delete(
+            `${API_URL}/teachercourse/delete/${teacher_course_id}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+        }
+      }
+      // create new teacher relationships
+      for (let user_id of selectedTeachers) {
+        await axios.post(
+          `${API_URL}/teachercourse/create`,
+          { course_id: courseId, user_id: user_id },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      }
+
       // Update course details
       await axios.put(
         `${API_URL}/courses/${courseId}`,
