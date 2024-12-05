@@ -5,6 +5,10 @@ const CourseList = ({ apiUrl }) => {
   const [courses, setCourses] = useState([]); // State für Kurse
   const [loading, setLoading] = useState(true); // Ladeanzeige
   const [error, setError] = useState(null); // Fehleranzeige
+  const [selectedCourse, setSelectedCourse] = useState(null); // Für das ausgewählte Kurs-Event
+  const [startDate, setStartDate] = useState(""); // Startdatum
+  const [endDate, setEndDate] = useState(""); // Enddatum
+  const [role, setRole] = useState(""); // Benutzerrolle
 
   // Funktion, um Kurse zu laden, mit useCallback umschlossen
   const fetchCourses = useCallback(async () => {
