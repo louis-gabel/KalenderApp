@@ -153,6 +153,15 @@ function App() {
                   <li>
                     <Link
                       className="dropdown-item"
+                      to="/help"
+                      onClick={toggleMenu}
+                    >
+                      Help
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="dropdown-item"
                       to="/login"
                       onClick={() => {
                         logout();
