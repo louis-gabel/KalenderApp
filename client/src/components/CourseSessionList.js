@@ -6,10 +6,7 @@ const CourseSessionList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Suchbegriff für Kurse
   const [loading, setLoading] = useState(true);
 
-  // Temporäre UserID, bis Authentifizierung implementiert ist
-  const TEMP_USER_ID = 4;
-
-  // Base URL aus der .env-Datei
+   // Base URL aus der .env-Datei
   const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const getUpcomingSessions = useCallback(async () => {
@@ -22,11 +19,13 @@ const CourseSessionList = () => {
 
   const getUserEnrollments = useCallback(async () => {
     const token = localStorage.getItem("token"); // Token for authentication
+    const user_id = localStorage.getItem("id"); // User_ID for identification
+console.log(user_id);
     const response = await axios.get(
       `${API_BASE_URL}/enrollment/my-enrollments`,
       {
-        params: { userId: TEMP_USER_ID },
         headers: { Authorization: `Bearer ${token}` },
+        params: { user_id }, // Query-Parameter für die User-ID
       }
     );
     return response.data;
@@ -34,21 +33,25 @@ const CourseSessionList = () => {
 
   const enrollInSession = async (sessionId) => {
     const token = localStorage.getItem("token"); // Token for authentication
-    const response = await axios.post(`${API_BASE_URL}/enrollment/enroll`, {
-      sessionId,
-      userId: TEMP_USER_ID,
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const user_id = localStorage.getItem("id"); // User_ID for identification
+
+    const response = await axios.post(`${API_BASE_URL}/enrollment/enroll`,
+      { sessionId }, // Body-Daten
+      {headers: { Authorization: `Bearer ${token}` },
+        params: { user_id }, // Query-Parameter für die User-ID
+        });
     return response.data;
   };
 
   const withdrawFromSession = async (sessionId) => {
     const token = localStorage.getItem("token"); // Token for authentication
-    const response = await axios.post(`${API_BASE_URL}/enrollment/withdraw`, {
-      sessionId,
-      userId: TEMP_USER_ID,
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const user_id = localStorage.getItem("id"); // User_ID for identification
+
+    const response = await axios.post(`${API_BASE_URL}/enrollment/withdraw`, 
+      { sessionId }, // Body-Daten
+      {headers: { Authorization: `Bearer ${token}` },
+        params: { user_id }, // Query-Parameter für die User-ID
+        });
     return response.data;
   };
 
