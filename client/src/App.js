@@ -18,7 +18,7 @@ import Register from "./components/Register";
 import AdminDashboard from "./components/AdminDashboard";
 import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
-import CreateCalendarevents from "./components/CreateCalendarevents";
+import AddCalendarEvents from "./components/AddCalendarEvents";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -204,8 +204,8 @@ function App() {
           element={onlyDozent({ element: <DozentDashboard /> })}
         />
         <Route
-          path="/dozent/:courseId"
-          element={onlyDozent({ element: <CreateCalendarevents /> })}
+          path="/dozent/:sessionId"
+          element={onlyDozent({ element: <AddCalendarEvents /> })}
         />
         <Route path="/list" element={onlyStudent({ element: <ListView /> })} />
         <Route

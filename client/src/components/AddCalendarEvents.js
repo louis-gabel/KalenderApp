@@ -5,8 +5,8 @@ import "../assets/admin_dashboard.css";
 import moment from "moment";
 
 const AddCalendarEvents = () => {
-  const { id } = useParams(); // ID der Session aus der URL
-  console.log(id);
+  const { sessionId } = useParams(); // ID der Session aus der URL
+  console.log(sessionId);
   const [eventsData, setEventsData] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -87,14 +87,14 @@ const AddCalendarEvents = () => {
         };
       });
       console.log("Sending POST request with data:", {
-        sessionId: id,
+        sessionId: sessionId,
         events: formattedEvents,
       });
       // Führe eine einzige POST-Anfrage aus
       await axios.post(
         `${API_URL}/teachercalendarevents/create`,
         {
-          sessionId: id,
+          sessionId: sessionId,
           events: formattedEvents,
         },
         {
@@ -119,7 +119,7 @@ const AddCalendarEvents = () => {
       className="container mt-4 edit-course-container add-events-container"
       style={{ backgroundColor: "#eee" }}
     >
-      <h1>Tage für Session {id} hinzufügen</h1>
+      <h1>Tage für Session {sessionId} hinzufügen</h1>
       {error && <p className="error">{error}</p>}
 
       {/* Liste der zu erstellenden Events */}
