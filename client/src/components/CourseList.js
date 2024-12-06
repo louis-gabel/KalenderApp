@@ -6,6 +6,8 @@ const CourseList = ({ apiUrl }) => {
   const [searchTerm, setSearchTerm] = useState(""); // Suchbegriff
   const [loading, setLoading] = useState(true); // Ladeanzeige
   const [error, setError] = useState(null); // Fehleranzeige
+  const [categories, setCategories] = useState([]); // list of categories
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   // Funktion, um Kurse zu laden, mit useCallback umschlossen
   const fetchCourses = useCallback(async () => {
@@ -29,21 +31,48 @@ const CourseList = ({ apiUrl }) => {
     }
   }, [apiUrl]);
 
+  const fetchCategories = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token"); // Token for authentication
+      const response = await axios.get(`${apiUrl}/category`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCategories(response.data); // Set loaded categories
+    } catch (err) {
+      setError("Error loading categories.");
+    }
+  }, [apiUrl]);
+
   // useEffect, um die Daten beim Mounten der Komponente zu laden
   useEffect(() => {
     fetchCourses();
-  }, [fetchCourses]);
+    fetchCategories();
+  }, [fetchCourses, fetchCategories]);
 
-  // Gefilterte Liste basierend auf dem Suchbegriff
-  const filteredCourses = courses.filter((course) =>
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) // Suche ignoriert Groß-/Kleinschreibung
-  );
+  // Gefilterte Liste basierend auf dem Suchbegriff und den ausgewählten Kategorien
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      // Alle auswählen falls keine Kategorien selected.
+      selectedCategories.length === 0 || selectedCategories.includes(course.category_id);
+    return matchesSearch && matchesCategory;
+  });
+
+  // Event-Handler für Checkbox-Änderung
+  const handleCheckboxChange = (categoryId) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId) // Entfernen, wenn bereits ausgewählt
+        : [...prev, categoryId] // Hinzufügen, wenn nicht ausgewählt
+    );
+  };
 
   return (
     <div>
       <h1>Courses</h1>
       {loading && <div>Loading...</div>} {/* Ladeanzeige */}
       {error && <div style={{ color: "red" }}>Error: {error}</div>}{" "} {/* Fehleranzeige */}
+      
       {/* Suchfeld */}
       <input
         type="text"
@@ -58,6 +87,50 @@ const CourseList = ({ apiUrl }) => {
           borderColor: "#034875",
         }}
       />
+
+      {/* Dropdown-Menü mit Checkboxen für Kategorien */}
+      <div style={{ marginBottom: "20px" }}>
+        <button
+          onClick={() => {
+            const dropdown = document.getElementById("categoryDropdown");
+            dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+          }}
+          style={{
+            padding: "10px",
+            fontSize: "16px",
+            cursor: "pointer",
+            width: "100%",
+          }}
+        >
+          Filter ein/ausblenden
+        </button>
+        <div
+          id="categoryDropdown"
+          style={{
+            display: "inline",
+            border: "1px solid #ccc",
+            padding: "10px",
+            backgroundColor: "white",
+            position: "absolute",
+            zIndex: 1,
+            right: 0,
+          }}
+        >
+          {categories.map((categories) => (
+            <div key={categories.category_id}>
+              <input
+                type="checkbox"
+                id={`category-${categories.category_id}`}
+                value={categories.category_id}
+                checked={selectedCategories.includes(categories.category_id)}
+                onChange={() => handleCheckboxChange(categories.category_id)} // Checkbox ändern
+              />
+              <label>{categories.category_name}</label>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {!loading && !error && (
         <ul>
           {filteredCourses.length > 0 ? (
