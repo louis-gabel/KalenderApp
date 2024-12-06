@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,7 +19,6 @@ import AdminDashboard from "./components/AdminDashboard";
 import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
 import CreateCalendarevents from "./components/CreateCalendarevents";
-import "./assets/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -32,23 +31,25 @@ const isAuthenticated = () => {
 
 const isDozent = () => {
   const role = localStorage.getItem("role");
-  return role === "Dozent";
+  return role === "Dozent"; // Prüfe auf ein gespeichertes Token
 };
 
 const isAdmin = () => {
   const role = localStorage.getItem("role");
-  return role === "Admin";
+  return role === "Admin"; // Prüfe auf ein gespeichertes Token
 };
 
 const isStudent = () => {
   const role = localStorage.getItem("role");
-  return role === "Student";
+  return role === "Student"; // Prüfe auf ein gespeichertes Token
 };
 
 const onlyDozent = ({ element }) => {
   if (!isAuthenticated() || !isDozent()) {
     return <Navigate to="/login" replace />;
   }
+
+  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
   return element;
 };
 
@@ -56,6 +57,8 @@ const onlyAdmin = ({ element }) => {
   if (!isAuthenticated() || !isAdmin()) {
     return <Navigate to="/login" replace />;
   }
+
+  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
   return element;
 };
 
@@ -63,15 +66,22 @@ const onlyStudent = ({ element }) => {
   if (!isAuthenticated() || !isStudent()) {
     return <Navigate to="/login" replace />;
   }
+
+  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
   return element;
 };
 
 const logout = () => {
+  // Entfernen des Tokens aus dem localStorage
   localStorage.removeItem("token");
 };
 
 function App() {
-  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false); // Zustand für das Menü
+
+  const toggleMenu = () => setMenuOpen(!menuOpen); // Menü öffnen/schließen
+
+  const location = useLocation(); // Holt den aktuellen Pfad
 
   // Definiere, auf welchen URLs die Navigation ausgeblendet werden soll
   const hiddenNavPaths = ["/login", "/register", "/admin", "/dozent"];
@@ -85,54 +95,83 @@ function App() {
       {/* Navigation nur anzeigen, wenn der Pfad nicht versteckt ist */}
       {!hideNav && (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container-fluid">
-            <Link className="navbar-brand" to="/">
-              MyApp
-            </Link>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <Link className="nav-link" to="/calendar">
-                    Calendar View
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/sessions">
-                    Course Sessions
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/courses">
-                    Courses
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/login"
-                    onClick={() => {
-                      logout();
-                    }}
-                  >
-                    Logout
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <div className="navbar-brand">Calendar App</div>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul className="navbar-nav mx-auto">
+              {" "}
+              {/* Dropdown-Menü für Calendar View, Course Sessions, Courses und Logout */}
+              <li className="nav-item dropdown">
+                <Link
+                  className="nav-link dropdown-toggle"
+                  to="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Menu
+                </Link>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <Link
+                      className="dropdown-item"
+                      to="/calendar"
+                      onClick={toggleMenu}
+                    >
+                      Calendar View
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="dropdown-item"
+                      to="/sessions"
+                      onClick={toggleMenu}
+                    >
+                      Course Sessions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="dropdown-item"
+                      to="/courses"
+                      onClick={toggleMenu}
+                    >
+                      Courses
+                    </Link>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <Link
+                      className="dropdown-item"
+                      to="/login"
+                      onClick={() => {
+                        logout();
+                        toggleMenu();
+                      }}
+                    >
+                      Logout
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </nav>
       )}
+
       {/* Routen */}
       <Routes>
         {/* Allgemeine Routen, die keine Authentifizierung erfordern */}
@@ -140,7 +179,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/help" element={<HelpSite />} />
 
-        {/* Geschützte Routen */}
+        {/* Geschützte Routen, die nur mit Authentifizierung zugänglich sind */}
         <Route
           path="/calendar"
           element={onlyStudent({ element: <Calendar /> })}
@@ -153,6 +192,7 @@ function App() {
           path="/courses"
           element={onlyStudent({ element: <CourseList apiUrl={API} /> })}
         />
+
         <Route
           path="/dozent"
           element={onlyDozent({ element: <DozentDashboard /> })}
