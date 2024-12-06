@@ -12,7 +12,6 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/multimonth": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
-    "bootstrap": "^5.3.3",
     "calendar-project": "file:",
     "concurrently": "^9.1.0"
   }
