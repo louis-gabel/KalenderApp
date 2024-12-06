@@ -8,37 +8,22 @@ const deleteCoursesession = async (id) => {
   try {
     // start a transaction
     await db.transaction(async (trx) => {
-      // get all dependencies of the course
-      const calendareventEntries = await trx("calendarevent")
-        .where({ session_id: id }) // Use `id` here consistently
-        .select("event_id");
+      // delete all dependencies of the course in calendarevent
+      await trx("calendarevent").where({ session_id: id }).del(); // Use `id` here consistently
+      // delete all dependencies of the course in registration
+      await trx("registration").where({ session_id: id }).del(); // Use `id` here consistently
 
-      // delete all dependencies of the course
-
-      if (calendareventEntries.length > 0) {
-        for (let entry of courseSessionEntries) {
-          // Delete related calendar events
-          await trx("calendarevent")
-            .where({ session_id: entry.session_id })
-            .del();
-        }
-
-        for (let entry of calendareventEntries) {
-          // Delete related registrations
-          await trx("registration")
-            .where({ session_id: entry.session_id })
-            .del();
-        }
-      }
       // delete the course itself
       await trx("coursesession").where({ session_id: id }).del();
     });
+
     return { success: true };
   } catch (error) {
     console.error(error); // Log the error for debugging
     return {
       success: false,
-      error: "Failed to delete session and related entries. " + error.message,
+      error:
+        "Failed to delete coursesession and related entries. " + error.message,
     };
   }
 };
