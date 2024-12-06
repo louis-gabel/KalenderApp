@@ -36,7 +36,7 @@ const Register = () => {
 
   return (
     <div className="container">
-      <h2>Register</h2>
+      <h2>Registrieren</h2>
       <form onSubmit={handleRegister}>
         <select name="titel" value={formData.titel} onChange={handleChange}>
           <option value="">-</option>
@@ -46,7 +46,7 @@ const Register = () => {
         <input
           type="text"
           name="prename"
-          placeholder="First Name"
+          placeholder="Vorname"
           value={formData.prename}
           onChange={handleChange}
           required
@@ -54,7 +54,7 @@ const Register = () => {
         <input
           type="text"
           name="surname"
-          placeholder="Last Name"
+          placeholder="Nachname"
           value={formData.surname}
           onChange={handleChange}
           required
@@ -62,7 +62,7 @@ const Register = () => {
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="E-Mail"
           value={formData.email}
           onChange={handleChange}
           required
@@ -70,7 +70,7 @@ const Register = () => {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Passwort"
           value={formData.password}
           onChange={handleChange}
           required
@@ -84,11 +84,11 @@ const Register = () => {
           <option value="Student">Student</option>
           <option value="Dozent">Dozent</option>
         </select>
-        <button type="submit">Register</button>
+        <button type="submit">Registrieren</button>
       </form>
       {success && <p className="success">{success}</p>}
       {error && <p className="error">{error}</p>}
-      <button onClick={() => navigate("/login")}>Back to Login</button>
+      <button onClick={() => navigate("/login")}>Zurück zum Login</button>
     </div>
   );
 };
