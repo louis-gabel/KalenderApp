@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -20,8 +20,8 @@ import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
 import CreateCalendarevents from "./components/CreateCalendarevents";
 import "./assets/App.css";
-import "./bootstrap/css/bootstrap.min.css";
-import "./bootstrap/js/bootstrap.bundle.min.js"; // Optional für interaktive Komponenten
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -32,25 +32,23 @@ const isAuthenticated = () => {
 
 const isDozent = () => {
   const role = localStorage.getItem("role");
-  return role === "Dozent"; // Prüfe auf ein gespeichertes Token
+  return role === "Dozent";
 };
 
 const isAdmin = () => {
   const role = localStorage.getItem("role");
-  return role === "Admin"; // Prüfe auf ein gespeichertes Token
+  return role === "Admin";
 };
 
 const isStudent = () => {
   const role = localStorage.getItem("role");
-  return role === "Student"; // Prüfe auf ein gespeichertes Token
+  return role === "Student";
 };
 
 const onlyDozent = ({ element }) => {
   if (!isAuthenticated() || !isDozent()) {
     return <Navigate to="/login" replace />;
   }
-
-  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
   return element;
 };
 
@@ -58,8 +56,6 @@ const onlyAdmin = ({ element }) => {
   if (!isAuthenticated() || !isAdmin()) {
     return <Navigate to="/login" replace />;
   }
-
-  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
   return element;
 };
 
@@ -67,22 +63,15 @@ const onlyStudent = ({ element }) => {
   if (!isAuthenticated() || !isStudent()) {
     return <Navigate to="/login" replace />;
   }
-
-  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
   return element;
 };
 
 const logout = () => {
-  // Entfernen des Tokens aus dem localStorage
   localStorage.removeItem("token");
 };
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false); // Zustand für das Menü
-
-  const toggleMenu = () => setMenuOpen(!menuOpen); // Menü öffnen/schließen
-
-  const location = useLocation(); // Holt den aktuellen Pfad
+  const location = useLocation();
 
   // Definiere, auf welchen URLs die Navigation ausgeblendet werden soll
   const hiddenNavPaths = ["/login", "/register", "/admin", "/dozent"];
@@ -95,38 +84,53 @@ function App() {
     <div>
       {/* Navigation nur anzeigen, wenn der Pfad nicht versteckt ist */}
       {!hideNav && (
-        <nav className="navbar">
-          <button className="menu-button" onClick={toggleMenu}>
-            ☰
-          </button>
-          <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
-            <li>
-              <Link to="/calendar" onClick={toggleMenu}>
-                Calendar View
-              </Link>
-            </li>
-            <li>
-              <Link to="/sessions" onClick={toggleMenu}>
-                Course Sessions
-              </Link>
-            </li>
-            <li>
-              <Link to="/courses" onClick={toggleMenu}>
-                Courses
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/login"
-                onClick={() => {
-                  toggleMenu();
-                  logout();
-                }}
-              >
-                Logout
-              </Link>
-            </li>
-          </ul>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="container-fluid">
+            <Link className="navbar-brand" to="/">
+              MyApp
+            </Link>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+              <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/calendar">
+                    Calendar View
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/sessions">
+                    Course Sessions
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/courses">
+                    Courses
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    to="/login"
+                    onClick={() => {
+                      logout();
+                    }}
+                  >
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
         </nav>
       )}
       {/* Routen */}
@@ -136,7 +140,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/help" element={<HelpSite />} />
 
-        {/* Geschützte Routen, die nur mit Authentifizierung zugänglich sind */}
+        {/* Geschützte Routen */}
         <Route
           path="/calendar"
           element={onlyStudent({ element: <Calendar /> })}
@@ -149,7 +153,6 @@ function App() {
           path="/courses"
           element={onlyStudent({ element: <CourseList apiUrl={API} /> })}
         />
-
         <Route
           path="/dozent"
           element={onlyDozent({ element: <DozentDashboard /> })}
