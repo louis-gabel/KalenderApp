@@ -3,6 +3,7 @@ const router = express.Router();
 const enrollmentController = require("../controllers/enrollmentController");
 const authenticate = require("../middleware/authenticate");
 
+
 // Route: Abrufen aller zukünftigen Sessions
 router.get("/upcoming", 
     authenticate,
@@ -10,7 +11,7 @@ router.get("/upcoming",
 
 // Route: Anmeldung zu einer Session
 router.post("/enroll", 
-    authenticate,
+    authenticate, 
     enrollmentController.enrollInSession);
 
 // Route: Abrufen aller Registrierungen eines Benutzers
