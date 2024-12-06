@@ -138,7 +138,7 @@ function App() {
                       to="/sessions"
                       onClick={toggleMenu}
                     >
-                      Kursblöcke
+                      Anmeldung
                     </Link>
                   </li>
                   <li>

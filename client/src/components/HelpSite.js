@@ -8,7 +8,7 @@ const HelpSite = () => {
       <section className="intro">
         <h2>Willkommen zur Kalender App!</h2>
         <p>
-          Dies ist eine Webanwendung, die es Nutzern ermögpcht, sich für verschiedene
+          Dies ist eine Webanwendung, die es Nutzern ermöglicht, sich für verschiedene
           Kurse anzumelden und ihren Kalender zu verwalten. Die App bietet eine einfache
           Benutzeroberfläche und eine Vielzahl an Funktionen zur Kursverwaltung.
         </p>
@@ -51,14 +51,14 @@ const HelpSite = () => {
       <section className="faq">
         <h2>Häufig gestellte Fragen (FAQ)</h2>
         <h3>Wie melde ich mich zu einem Kurs an?</h3>
-        <p>Die Anmeldung ist unter dem Abschnitt course sessions mögpch.
-          Um sich für einen Kurs anzumelden, kpcken Sie einfach auf den "Anmelden"-Button neben dem Kurs, der Sie interessiert. Falls bereits alle Plätze belegt sind, wird der Button deaktiviert.</p>
+        <p>Die Anmeldung ist unter dem Abschnitt Anmeldungen möglich.
+          Um sich für einen Kurs anzumelden, klicken Sie einfach auf den "Anmelden"-Button neben dem Kurs, der Sie interessiert. Falls bereits alle Plätze belegt sind, wird eine Fehlermeldung angezeigt</p>
 
         <h3>Kann ich mich von einem Kurs abmelden?</h3>
-        <p>Ja, Sie können sich jederzeit von einem Kurs abmelden, solange noch keine Konfpkte mit Ihrem Kalender bestehen. Kpcken Sie auf den "Abmelden"-Button, um den Kurs zu verlassen.</p>
+        <p>Ja, Sie können sich jederzeit von einem Kurs abmelden. Klicken Sie auf den "Abmelden"-Button, um den Kurs zu verlassen.</p>
         
-        <h3>Wie kann ich meine persönpchen Daten ändern?</h3>
-        <p>Aktuell können Sie Ihre persönpchen Daten über die WebApp nicht ändern. Bitte wenden Sie sich an den Support, falls Änderungen erforderpch sind.</p>
+        <h3>Wie kann ich meine persönlichen Daten ändern?</h3>
+        <p>Aktuell können Sie Ihre persönlichen Daten über die WebApp nicht ändern. Bitte wenden Sie sich an den Support, falls Änderungen erforderlich sind.</p>
       </section>
 
       <section className="contact">
