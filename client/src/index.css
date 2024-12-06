@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --bs-primary: #FFFFFF;
+  --bs-secondary: #EEE; 
+  --bs-danger: #034875;
+}

@@ -20,8 +20,8 @@ import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
 import CreateCalendarevents from "./components/CreateCalendarevents";
 import "./assets/App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -87,7 +87,7 @@ function App() {
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <div className="container-fluid">
             <Link className="navbar-brand" to="/">
-              MyApp
+              KalenderApp
             </Link>
             <button
               className="navbar-toggler"
