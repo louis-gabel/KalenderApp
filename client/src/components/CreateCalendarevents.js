@@ -2,9 +2,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../assets/admin_dashboard.css";
+import moment from "moment";
 
 const AddCalendarEvents = () => {
-  const { sessionId } = useParams(); // ID der Session aus der URL
+  const { id } = useParams(); // ID der Session aus der URL
+  console.log(id);
   const [eventsData, setEventsData] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -29,8 +31,6 @@ const AddCalendarEvents = () => {
     setEventsData([
       ...eventsData,
       {
-        session_id: sessionId,
-        user_id: "",
         start_time: "",
         end_time: "",
         room_id: "",
@@ -60,7 +60,6 @@ const AddCalendarEvents = () => {
     // Set session_id for all events
     const updatedEvents = eventsData.map((event) => ({
       ...event,
-      session_id: sessionId, // ID der Session, z. B. aus der URL oder einem Zustand
     }));
 
     await createCalendarEvents(updatedEvents); // Funktion zum Senden der POST-Anfragen
@@ -69,25 +68,38 @@ const AddCalendarEvents = () => {
 
   const createCalendarEvents = async (eventsData) => {
     const token = localStorage.getItem("token");
-    const userID = localStorage.getItem("id");
+    const time_format = "YYYY-MM-DD HH:mm:ss";
+
     try {
-      // Map over eventsData and create all events
-      await Promise.all(
-        eventsData.map(async (event) => {
-          await axios.post(
-            `${API_URL}/calendarevents`,
-            {
-              session_id: sessionId,
-              user_id: userID,
-              start_time: event.start_time,
-              end_time: event.end_time,
-              room_id: event.room_id,
-            },
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-        })
+      // Bereite die Events vor
+      const formattedEvents = eventsData.map((event) => {
+        const start_time = moment(event.start_time);
+        const end_time = moment(event.end_time, "HH:mm").set({
+          year: start_time.year(),
+          month: start_time.month(),
+          date: start_time.date(),
+        });
+
+        return {
+          start_time: start_time.format(time_format), // Formatiere die start_time
+          end_time: end_time.format(time_format), // Formatiere die end_time
+          room_id: event.room_id,
+        };
+      });
+      console.log("Sending POST request with data:", {
+        sessionId: id,
+        events: formattedEvents,
+      });
+      // Führe eine einzige POST-Anfrage aus
+      await axios.post(
+        `${API_URL}/teachercalendarevents/create`,
+        {
+          sessionId: id,
+          events: formattedEvents,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       alert("Alle Kalendereinträge wurden erfolgreich erstellt!");
@@ -107,7 +119,7 @@ const AddCalendarEvents = () => {
       className="container mt-4 edit-course-container add-events-container"
       style={{ backgroundColor: "#eee" }}
     >
-      <h1>Tage für Session {sessionId} hinzufügen</h1>
+      <h1>Tage für Session {id} hinzufügen</h1>
       {error && <p className="error">{error}</p>}
 
       {/* Liste der zu erstellenden Events */}
@@ -130,7 +142,7 @@ const AddCalendarEvents = () => {
                 className="form-control"
                 value={event.start_time}
                 onChange={(e) =>
-                  updateEvent(index, "start_time", e.target.value)
+                  updateEvent(index, { ...event, start_time: e.target.value })
                 }
               />
             </div>
@@ -140,7 +152,9 @@ const AddCalendarEvents = () => {
                 type="time"
                 className="form-control"
                 value={event.end_time}
-                onChange={(e) => updateEvent(index, "end_time", e.target.value)}
+                onChange={(e) =>
+                  updateEvent(index, { ...event, end_time: e.target.value })
+                }
               />
             </div>
             <div className="mb-3">
@@ -148,7 +162,9 @@ const AddCalendarEvents = () => {
               <select
                 className="form-select"
                 value={event.room_id}
-                onChange={(e) => updateEvent(index, "room_id", e.target.value)}
+                onChange={(e) =>
+                  updateEvent(index, { ...event, room_id: e.target.value })
+                }
                 required
               >
                 <option value="">Raum auswählen</option>
