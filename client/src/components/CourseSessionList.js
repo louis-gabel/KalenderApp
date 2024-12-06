@@ -33,17 +33,21 @@ const CourseSessionList = () => {
   }, [API_BASE_URL]);
 
   const enrollInSession = async (sessionId) => {
+    const token = localStorage.getItem("token"); // Token for authentication
     const response = await axios.post(`${API_BASE_URL}/enrollment/enroll`, {
       sessionId,
       userId: TEMP_USER_ID,
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   };
 
   const withdrawFromSession = async (sessionId) => {
+    const token = localStorage.getItem("token"); // Token for authentication
     const response = await axios.post(`${API_BASE_URL}/enrollment/withdraw`, {
       sessionId,
       userId: TEMP_USER_ID,
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   };

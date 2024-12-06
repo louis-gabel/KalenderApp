@@ -7,9 +7,12 @@ function ListView() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     // Daten von der API laden
     axios
-      .get("http://localhost:5000/api/calendar/calendarevents")
+      .get("http://localhost:5000/api/calendar/calendarevents",{
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
         const loadedEvents = response.data.map((event) => ({
           title: `Room ${event.room_id}`,
