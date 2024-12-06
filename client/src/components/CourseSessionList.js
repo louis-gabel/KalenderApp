@@ -20,7 +20,7 @@ const CourseSessionList = () => {
   const getUserEnrollments = useCallback(async () => {
     const token = localStorage.getItem("token"); // Token for authentication
     const user_id = localStorage.getItem("id"); // User_ID for identification
-console.log(user_id);
+
     const response = await axios.get(
       `${API_BASE_URL}/enrollment/my-enrollments`,
       {
@@ -56,6 +56,17 @@ console.log(user_id);
   };
 
   useEffect(() => {
+    const getTeacherCalendarEvents = async (sessionId) => {  // **Verschoben in den useEffect**
+      const token = localStorage.getItem("token"); // Token for authentication
+      const response = await axios.get(
+        `${API_BASE_URL}/teachercalendarevents/${sessionId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return response.data;
+    };
+
     const fetchCoursesAndEnrollments = async () => {
       try {
         setLoading(true);
@@ -66,10 +77,17 @@ console.log(user_id);
 
         // Prüfen, ob der Benutzer zu jedem Kurs angemeldet ist
         const enrolledSessionIds = userEnrollments.map((e) => e.session_id);
-        const coursesWithStatus = upcomingCourses.map((course) => ({
-          ...course,
+        const coursesWithStatus = await Promise.all(
+          upcomingCourses.map(async (course) => {
+            // Kalendereinträge für jede Session abrufen
+            const calendarEvents = await getTeacherCalendarEvents(course.session_id);
+            return {
+              ...course,
           isEnrolled: enrolledSessionIds.includes(course.session_id),
-        }));
+          calendarEvents, // Füge Kalendereinträge zu jedem Kurs hinzu
+            };
+          })
+        );
 
         // Kurse mit Status speichern
         setCourses(coursesWithStatus);
@@ -81,7 +99,7 @@ console.log(user_id);
     };
 
     fetchCoursesAndEnrollments();
-  }, [getUpcomingSessions, getUserEnrollments]);
+  }, [getUpcomingSessions, getUserEnrollments, API_BASE_URL]);
 
   const handleEnroll = async (sessionId) => {
     try {
@@ -161,6 +179,24 @@ console.log(user_id);
                   <strong>Ende:</strong>{" "}
                   {new Date(course.end_date).toLocaleString()}
                 </p>
+{/* Anzeige der Kalendereinträge für die Session */}
+<div>
+              <h4>Kalendereinträge:</h4>
+              {course.calendarEvents.length > 0 ? (
+                <ul>
+                  {course.calendarEvents.map((event) => (
+                    <li key={event.event_id}>
+                      <p>Start: {new Date(event.start_time).toLocaleString()}</p>
+                      <p>Ende: {new Date(event.end_time).toLocaleString()}</p>
+                      <p>Raum: {event.room_id}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Keine Kalendereinträge für diese Session verfügbar.</p>
+              )}
+            </div>
+
               </div>
               <div className="card-footer text-center">
                 <button
