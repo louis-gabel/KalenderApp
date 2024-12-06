@@ -12,6 +12,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const teachercourseRoutes = require("./routes/teachercourseRoutes");
 const coursesessionRoutes = require("./routes/coursessionRoutes");
 const roomRoutes = require("./routes/roomRoutes");
+const teacherCalendarEventRoutes = require("./routes/teacherCalendareventRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/teachercourse", teachercourseRoutes);
 app.use("/api/coursesessions", coursesessionRoutes);
 app.use("/api/room", roomRoutes);
+app.use("/api/teachercalendarevents", teacherCalendarEventRoutes);
 
 // Define the port number from environment variables
 const PORT = process.env.BACKEND_PORT;
