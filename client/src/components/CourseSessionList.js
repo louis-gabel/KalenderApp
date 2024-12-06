@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
+
 const CourseSessionList = () => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Suchbegriff für Kurse
@@ -174,20 +175,50 @@ const CourseSessionList = () => {
                 <h5 className="card-title text-center text-primary">{course.title}</h5>
                 <p className="card-text">{course.description}</p>
                 <p className="card-text">
-                  <strong>Start:</strong>{" "}
-                  {new Date(course.start_date).toLocaleString()} <br />
+                <strong>Start:</strong>{" "}
+                {new Date(course.start_date).toLocaleDateString("de-DE", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })} 
+                <br />
                   <strong>Ende:</strong>{" "}
-                  {new Date(course.end_date).toLocaleString()}
+                {new Date(course.end_date).toLocaleDateString("de-DE", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
                 </p>
 {/* Anzeige der Kalendereinträge für die Session */}
 <div>
-              <h4>Kalendereinträge:</h4>
+              
               {course.calendarEvents.length > 0 ? (
                 <ul>
                   {course.calendarEvents.map((event) => (
                     <li key={event.event_id}>
-                      <p>Start: {new Date(event.start_time).toLocaleString()}</p>
-                      <p>Ende: {new Date(event.end_time).toLocaleString()}</p>
+                      <p>
+                        Start:{" "}
+                        {new Date(event.start_time).toLocaleString("de-DE", {
+                          day: "numeric",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false, // Verwendet das 24-Stunden-Format
+                        })}
+                      </p>
+                      <p>
+                        Ende:{" "}
+                        {new Date(event.end_time).toLocaleString("de-DE", {
+                          day: "numeric",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false, // Verwendet das 24-Stunden-Format
+                        })}
+                      </p>
+
                       <p>Raum: {event.room_id}</p>
                     </li>
                   ))}

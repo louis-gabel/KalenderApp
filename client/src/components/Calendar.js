@@ -59,6 +59,7 @@ function Calendar() {
           } // Ansicht je nach Status
           key={view} // Neu-Rendern bei Ansichtwechsel erzwingen
           firstDay={1} // Woche startet am Montag
+          locale={"de"}
           aspectRatio={2.7}
           slotMinTime={"06:00:00"}
           slotMaxTime={"20:00:00"}

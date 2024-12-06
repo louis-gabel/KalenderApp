@@ -45,7 +45,7 @@
 
 /* Optional: Ereignisse in der Monatsansicht gut sichtbar machen */
 .fc-event {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   background-color: #1a73e8; /* Beispiel-Farbe */
   color: #fff;
   border-radius: 1px;
