@@ -15,8 +15,12 @@ const CourseList = ({ apiUrl }) => {
     }
 
     try {
-      const response = await axios.get(`${apiUrl}/courses`); // Stammdaten der Kurse abrufen
-      setCourses(response.data); // Kurse in den State speichern
+      const token = localStorage.getItem("token");
+      // Create course
+      const courseResponse = await axios.get(`${apiUrl}/courses`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCourses(courseResponse.data); // Set loaded courses
     } catch (err) {
       setError(err.response?.data?.message || "Error fetching courses."); // Detaillierte Fehlermeldung
     } finally {
@@ -33,7 +37,8 @@ const CourseList = ({ apiUrl }) => {
     <div>
       <h1>Courses</h1>
       {loading && <div>Loading...</div>} {/* Ladeanzeige */}
-      {error && <div style={{ color: "red" }}>Error: {error}</div>} {/* Fehleranzeige */}
+      {error && <div style={{ color: "red" }}>Error: {error}</div>}{" "}
+      {/* Fehleranzeige */}
       {!loading && !error && (
         <ul>
           {courses.length > 0 ? (

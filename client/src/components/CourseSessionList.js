@@ -12,14 +12,23 @@ const CourseSessionList = () => {
   const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const getUpcomingSessions = useCallback(async () => {
-    const response = await axios.get(`${API_BASE_URL}/enrollment/upcoming`);
+    const token = localStorage.getItem("token"); // Token for authentication
+    const response = await axios.get(`${API_BASE_URL}/enrollment/upcoming`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   }, [API_BASE_URL]);
 
   const getUserEnrollments = useCallback(async () => {
-    const response = await axios.get(`${API_BASE_URL}/enrollment/my-enrollments`, {
-      params: { userId: TEMP_USER_ID },
-    });
+    const token = localStorage.getItem("token"); // Token for authentication
+
+    const response = await axios.get(
+      `${API_BASE_URL}/enrollment/my-enrollments`,
+      {
+        params: { userId: TEMP_USER_ID },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   }, [API_BASE_URL]);
 
@@ -72,7 +81,9 @@ const CourseSessionList = () => {
       await enrollInSession(sessionId);
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
-          course.session_id === sessionId ? { ...course, isEnrolled: true } : course
+          course.session_id === sessionId
+            ? { ...course, isEnrolled: true }
+            : course
         )
       );
       alert("Erfolgreich angemeldet!");
@@ -89,7 +100,9 @@ const CourseSessionList = () => {
       await withdrawFromSession(sessionId);
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
-          course.session_id === sessionId ? { ...course, isEnrolled: false } : course
+          course.session_id === sessionId
+            ? { ...course, isEnrolled: false }
+            : course
         )
       );
       alert("Erfolgreich abgemeldet!");
