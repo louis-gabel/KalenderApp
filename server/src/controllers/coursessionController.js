@@ -4,8 +4,16 @@ const createCourseSession = async (req, res) => {
   try {
     // Extract course data from the request body
     const session = req.body;
-    await coursesessionModel.createCoursesession(session);
-    res.status(200).json({ message: "Session created successfully" });
+
+    const coursesession = await coursesessionModel.createCoursesession(session);
+    const newCourseSessionId = coursesession[0];
+    // Send a success response with status code 201 (Created)
+    res
+      .status(201)
+      .json({
+        session_id: newCourseSessionId,
+        message: "Course created successfully",
+      });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

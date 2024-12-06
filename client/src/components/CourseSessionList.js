@@ -21,7 +21,6 @@ const CourseSessionList = () => {
 
   const getUserEnrollments = useCallback(async () => {
     const token = localStorage.getItem("token"); // Token for authentication
-
     const response = await axios.get(
       `${API_BASE_URL}/enrollment/my-enrollments`,
       {

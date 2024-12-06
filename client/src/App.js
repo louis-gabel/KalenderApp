@@ -18,7 +18,7 @@ import Register from "./components/Register";
 import AdminDashboard from "./components/AdminDashboard";
 import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
-
+import CreateCalendarevents from "./components/CreateCalendarevents";
 import "./assets/App.css";
 
 const API = process.env.REACT_APP_API_URL;
@@ -28,9 +28,41 @@ const isAuthenticated = () => {
   return !!localStorage.getItem("token"); // Prüfe auf ein gespeichertes Token
 };
 
-const ProtectedRoute = ({ element }) => {
-  // Wenn der Benutzer nicht authentifiziert ist, wird er zur Login-Seite weitergeleitet
-  if (!isAuthenticated()) {
+const isDozent = () => {
+  const role = localStorage.getItem("role");
+  return role === "Dozent"; // Prüfe auf ein gespeichertes Token
+};
+
+const isAdmin = () => {
+  const role = localStorage.getItem("role");
+  return role === "Admin"; // Prüfe auf ein gespeichertes Token
+};
+
+const isStudent = () => {
+  const role = localStorage.getItem("role");
+  return role === "Student"; // Prüfe auf ein gespeichertes Token
+};
+
+const onlyDozent = ({ element }) => {
+  if (!isAuthenticated() || !isDozent()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
+  return element;
+};
+
+const onlyAdmin = ({ element }) => {
+  if (!isAuthenticated() || !isAdmin()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Wenn authentifiziert, wird die angeforderte Komponente angezeigt
+  return element;
+};
+
+const onlyStudent = ({ element }) => {
+  if (!isAuthenticated() || !isStudent()) {
     return <Navigate to="/login" replace />;
   }
 
@@ -54,7 +86,8 @@ function App() {
   const hiddenNavPaths = ["/login", "/register", "/admin", "/dozent"];
   const hideNav =
     hiddenNavPaths.some((path) => location.pathname.startsWith(path)) ||
-    location.pathname.startsWith("/admin");
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/dozent");
 
   return (
     <div>
@@ -104,35 +137,37 @@ function App() {
         {/* Geschützte Routen, die nur mit Authentifizierung zugänglich sind */}
         <Route
           path="/calendar"
-          element={<ProtectedRoute element={<Calendar />} />}
+          element={onlyStudent({ element: <Calendar /> })}
         />
         <Route
           path="/sessions"
-          element={<ProtectedRoute element={<CourseSessionList />} />}
+          element={onlyStudent({ element: <CourseSessionList /> })}
         />
         <Route
           path="/courses"
-          element={<ProtectedRoute element={<CourseList apiUrl={API} />} />}
+          element={onlyStudent({ element: <CourseList apiUrl={API} /> })}
+        />
+
+        <Route
+          path="/dozent"
+          element={onlyDozent({ element: <DozentDashboard /> })}
+        />
+        <Route
+          path="/dozent/:courseId"
+          element={onlyDozent({ element: <CreateCalendarevents /> })}
+        />
+        <Route path="/list" element={onlyStudent({ element: <ListView /> })} />
+        <Route
+          path="/enroll/:sessionId"
+          element={onlyStudent({ element: <EnrollPage /> })}
         />
         <Route
           path="/admin"
-          element={<ProtectedRoute element={<AdminDashboard />} />}
-        />
-        <Route
-          path="/dozent"
-          element={<ProtectedRoute element={<DozentDashboard />} />}
-        />
-        <Route
-          path="/list"
-          element={<ProtectedRoute element={<ListView />} />}
-        />
-        <Route
-          path="/enroll/:sessionId"
-          element={<ProtectedRoute element={<EnrollPage />} />}
+          element={onlyAdmin({ element: <AdminDashboard /> })}
         />
         <Route
           path="/admin/:courseId"
-          element={<ProtectedRoute element={<EditCourse />} />}
+          element={onlyAdmin({ element: <EditCourse /> })}
         />
         {/* Default Route */}
         <Route path="/" element={<Navigate to="/calendar" replace />} />
