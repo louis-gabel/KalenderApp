@@ -48,6 +48,10 @@ function YearView({ events, onMonthClick }) {
             contentHeight={1}
             dayMaxEventRows={2}
             moreLinkClick={"popover"}
+            eventContent={(info) => {
+              return <div>{info.event.title}</div>; // Nur der Titel wird angezeigt
+            }}
+            
             headerToolbar={false} // Keine Header-Navigation in der Jahresansicht
             events={monthData.events} // Ereignisse für diesen Monat
             firstDay={1} // Wochen beginnen mit Montag
