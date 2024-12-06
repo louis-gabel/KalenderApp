@@ -3,6 +3,7 @@ import axios from "axios";
 
 const CourseSessionList = () => {
   const [courses, setCourses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Suchbegriff für Kurse
   const [loading, setLoading] = useState(true);
 
   // Temporäre UserID, bis Authentifizierung implementiert ist
@@ -117,55 +118,75 @@ const CourseSessionList = () => {
     }
   };
 
+  // Filterkurse basierend auf dem Suchbegriff
+  const filteredCourses = courses.filter((course) =>
+    course.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className="alert alert-info text-center">Lade Daten...</div>;
   }
 
   return (
-    <div>
-      <h1>Verfügbare Kurse</h1>
-      <ul>
-        {courses.map((course) => (
-          <li key={course.session_id} style={{ marginBottom: "20px" }}>
-            <h2>{course.title}</h2>
-            <p>{course.description}</p>
-            <p>
-              Start: {new Date(course.start_date).toLocaleString()} - Ende:{" "}
-              {new Date(course.end_date).toLocaleString()}
-            </p>
-            <div>
-              <button
-                onClick={() => handleEnroll(course.session_id)}
-                disabled={course.isEnrolled}
-                style={{
-                  backgroundColor: course.isEnrolled ? "gray" : "#4CAF50",
-                  color: "white",
-                  padding: "10px 20px",
-                  border: "none",
-                  cursor: course.isEnrolled ? "not-allowed" : "pointer",
-                  marginRight: "10px",
-                }}
-              >
-                {course.isEnrolled ? "Bereits angemeldet" : "Anmelden"}
-              </button>
-              {course.isEnrolled && (
+    <div className="container mt-4">
+      <h1 className="text-primary mb-4">Verfügbare Kurse</h1>
+
+      {/* Suchfeld */}
+      <div className="row mb-3">
+        <div className="col-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Kurs suchen"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Kursliste */}
+      <div className="row">
+        {filteredCourses.map((course) => (
+          <div className="col-md-4 mb-4" key={course.session_id}>
+            <div className="card h-100">
+              <div className="card-body">
+                <h5 className="card-title text-center text-primary">{course.title}</h5>
+                <p className="card-text">{course.description}</p>
+                <p className="card-text">
+                  <strong>Start:</strong>{" "}
+                  {new Date(course.start_date).toLocaleString()} <br />
+                  <strong>Ende:</strong>{" "}
+                  {new Date(course.end_date).toLocaleString()}
+                </p>
+              </div>
+              <div className="card-footer text-center">
                 <button
-                  onClick={() => handleWithdraw(course.session_id)}
-                  style={{
-                    backgroundColor: "#f44336",
-                    color: "white",
-                    padding: "10px 20px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  onClick={() => handleEnroll(course.session_id)}
+                  className={`btn ${
+                    course.isEnrolled ? "btn-secondary" : "btn-success"
+                  } w-100 mb-2`}
+                  disabled={course.isEnrolled}
                 >
-                  Abmelden
+                  {course.isEnrolled ? "Bereits angemeldet" : "Anmelden"}
                 </button>
-              )}
+                {course.isEnrolled && (
+                  <button
+                    onClick={() => handleWithdraw(course.session_id)}
+                    className="btn btn-danger w-100"
+                  >
+                    Abmelden
+                  </button>
+                )}
+              </div>
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
+        {filteredCourses.length === 0 && (
+          <div className="col-12">
+            <div className="alert alert-warning text-center">Keine Kurse gefunden.</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
