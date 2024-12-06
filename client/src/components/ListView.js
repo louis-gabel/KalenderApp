@@ -8,7 +8,6 @@ function ListView() {
   const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     // Daten von der API laden
     const token = localStorage.getItem("token"); // Token for authentication
     const user_id = localStorage.getItem("id"); // User_ID for identification
