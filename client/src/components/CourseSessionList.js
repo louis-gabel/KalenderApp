@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
+
 const CourseSessionList = () => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Suchbegriff für Kurse
@@ -190,7 +191,7 @@ const CourseSessionList = () => {
                 </p>
 {/* Anzeige der Kalendereinträge für die Session */}
 <div>
-              <h4>Kalendereinträge:</h4>
+              
               {course.calendarEvents.length > 0 ? (
                 <ul>
                   {course.calendarEvents.map((event) => (
