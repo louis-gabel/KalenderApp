@@ -17,19 +17,17 @@ function Calendar() {
     const token = localStorage.getItem("token"); // Token for authentication
     const user_id = localStorage.getItem("id"); // User_ID for identification
 
-    
     // Daten von der API laden
     axios
-      .get(`${API_URL}/calendar/calendarevents`
-        , {headers: { Authorization: `Bearer ${token}` },
+      .get(`${API_URL}/calendar/calendarevents`, {
+        headers: { Authorization: `Bearer ${token}` },
         params: { user_id }, // Query-Parameter für die User-ID
-        }
-     )
+      })
       .then((response) => {
         const loadedEvents = response.data.map((event) => ({
           title: `${event.course_title}`,
-          start: event.start_time, 
-          end: event.end_time, 
+          start: event.start_time,
+          end: event.end_time,
           roomName: event.room_name,
         }));
         setEvents(loadedEvents); // Events im State speichern
@@ -87,15 +85,42 @@ function Calendar() {
   };
 
   return (
-    <div>
-      <div className="view-buttons">
-        <button onClick={() => navigate("/list")}>List</button>{" "}
-        {/* Navigiert zu /list */}
-        <button onClick={() => setView("day")}>Day</button>
-        <button onClick={() => setView("week")}>Week</button>
-        <button onClick={() => setView("month")}>Month</button>
-        <button onClick={() => setView("year")}>Year</button>
+    <div className="container mt-4">
+      {/* Buttons für Ansicht */}
+      <div className="d-flex justify-content-center mb-4">
+        <button
+          className="btn btn-secondary mx-2"
+          onClick={() => navigate("/list")}
+        >
+          List
+        </button>
+        <button
+          className="btn btn-secondary mx-2"
+          onClick={() => setView("day")}
+        >
+          Day
+        </button>
+        <button
+          className="btn btn-secondary mx-2"
+          onClick={() => setView("week")}
+        >
+          Week
+        </button>
+        <button
+          className="btn btn-secondary mx-2"
+          onClick={() => setView("month")}
+        >
+          Month
+        </button>
+        <button
+          className="btn btn-secondary mx-2"
+          onClick={() => setView("year")}
+        >
+          Year
+        </button>
       </div>
+
+      {/* Kalenderansicht */}
       <div className="calendar-container">{renderView()}</div>
     </div>
   );

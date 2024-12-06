@@ -1,7 +1,8 @@
 // src/components/ListView.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../assets/ListView.css";
+import { Link } from "react-router-dom";
+import "../assets/ListView.css"; // Optional, wenn eigene Styles benötigt werden
 
 function ListView() {
   const [events, setEvents] = useState([]);
@@ -44,21 +45,34 @@ function ListView() {
   }, [API_URL]);
 
   return (
-    <div className="list-view">
+    <div className="container mt-4">
+      {/* Button to switch to Year View */}
+      <button className="btn btn-secondary mb-3">
+        <Link to="/calendar" className="text-white text-decoration-none">
+          Back to calendar view
+        </Link>
+      </button>
+
       <h2>Event List</h2>
+
+      {/* Check if there are no events */}
       {events.length === 0 ? (
         <p>No events available.</p>
       ) : (
-        <ul>
+        <ul className="list-group">
+          {/* Mapping events into a list */}
           {events.map((event, index) => (
-            <li key={index}>
-              <strong>{event.title}</strong>
-              <br />
-              <span>Teacher: {event.teacher}</span>
-              <br />
-              <span>Start: {event.start}</span>
-              <br />
-              <span>End: {event.end}</span>
+            <li key={index} className="list-group-item mb-3">
+              <h5 className="mb-2">{event.title}</h5>
+              <p className="mb-1">
+                <strong>Teacher:</strong> {event.teacher}
+              </p>
+              <p className="mb-1">
+                <strong>Start:</strong> {event.start}
+              </p>
+              <p className="mb-1">
+                <strong>End:</strong> {event.end}
+              </p>
             </li>
           ))}
         </ul>
