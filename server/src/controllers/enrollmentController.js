@@ -14,7 +14,7 @@ const getUpcomingSessions = async (req, res) => {
 // Anmeldung zu einem Kurs
 const enrollInSession = async (req, res) => {
   const { sessionId } = req.body; // Erwartet sessionId im Request-Body
-  const userId = 4 //req.user.id; // Erwartet User-ID aus einem Auth-Middleware-Token
+  const userId = req.query.user_id; // Erwartet User-ID aus einem Auth-Middleware-Token
 
   try {
     const result = await enrollmentModel.enrollInSession(sessionId, userId);
@@ -27,7 +27,7 @@ const enrollInSession = async (req, res) => {
 
 // Abrufen aller Registrierungen eines Benutzers
 const getUserEnrollments = async (req, res) => {
-  const userId = 4 //req.user.id; // Erwartet User-ID aus einem Auth-Middleware-Token
+  const userId = req.query.user_id; // Erwartet User-ID aus einem Auth-Middleware-Token
 
   try {
     const enrollments = await enrollmentModel.getUserEnrollments(userId);
@@ -41,7 +41,7 @@ const getUserEnrollments = async (req, res) => {
 // Abmeldung von einem Kurs
 const withdrawFromSession = async (req, res) => {
   const { sessionId } = req.body; // Erwartet sessionId im Request-Body
-  const userId = 4 //req.user.id; // Erwartet User-ID aus einem Auth-Middleware-Token
+  const userId = req.query.user_id; // Erwartet User-ID aus einem Auth-Middleware-Token
 
   try {
     const result = await enrollmentModel.withdrawFromSession(sessionId, userId);
