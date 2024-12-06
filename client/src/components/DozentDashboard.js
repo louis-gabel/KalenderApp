@@ -116,9 +116,15 @@ const DozentDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       // Create course session
-      await axios.post(`${API_URL}/coursesessions`, sessionDataNew, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const new_session = await axios.post(
+        `${API_URL}/coursesessions`,
+        sessionDataNew,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const courseId = new_session.data.session_id; // ID of the created course
 
       // Reload data after successful creation
       fetchCourseSessions();
@@ -130,6 +136,7 @@ const DozentDashboard = () => {
         start_date: "",
         end_date: "",
       });
+      navigate(`/dozent/${courseId}`);
     } catch (err) {
       setError(`Error while creating course session.`);
     }

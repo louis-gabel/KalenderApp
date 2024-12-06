@@ -18,7 +18,7 @@ import Register from "./components/Register";
 import AdminDashboard from "./components/AdminDashboard";
 import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
-
+import CreateCalendarevents from "./components/CreateCalendarevents";
 import "./assets/App.css";
 
 const API = process.env.REACT_APP_API_URL;
@@ -54,7 +54,8 @@ function App() {
   const hiddenNavPaths = ["/login", "/register", "/admin", "/dozent"];
   const hideNav =
     hiddenNavPaths.some((path) => location.pathname.startsWith(path)) ||
-    location.pathname.startsWith("/admin");
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/dozent");
 
   return (
     <div>
@@ -121,6 +122,10 @@ function App() {
         <Route
           path="/dozent"
           element={<ProtectedRoute element={<DozentDashboard />} />}
+        />
+        <Route
+          path="/dozent/:courseId"
+          element={<ProtectedRoute element={<CreateCalendarevents />} />}
         />
         <Route
           path="/list"
