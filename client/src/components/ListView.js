@@ -49,15 +49,15 @@ function ListView() {
       {/* Button to switch to Year View */}
       <button className="btn btn-secondary mb-3">
         <Link to="/calendar" className="text-white text-decoration-none">
-          Back to calendar view
+          Zurück zur Kalenderansicht
         </Link>
       </button>
 
-      <h2>Event List</h2>
+      <h2>Eventliste</h2>
 
       {/* Check if there are no events */}
       {events.length === 0 ? (
-        <p>No events available.</p>
+        <p>Keine Events verfügbar.</p>
       ) : (
         <ul className="list-group">
           {/* Mapping events into a list */}

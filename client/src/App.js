@@ -95,7 +95,7 @@ function App() {
       {/* Navigation nur anzeigen, wenn der Pfad nicht versteckt ist */}
       {!hideNav && (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="navbar-brand">Calendar App</div>
+          <div className="navbar-brand">Kalender App</div>
           <button
             className="navbar-toggler"
             type="button"
@@ -120,7 +120,7 @@ function App() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Menu
+                  Menü
                 </Link>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
@@ -129,7 +129,7 @@ function App() {
                       to="/calendar"
                       onClick={toggleMenu}
                     >
-                      Calendar View
+                      Kalenderansicht
                     </Link>
                   </li>
                   <li>
@@ -138,7 +138,7 @@ function App() {
                       to="/sessions"
                       onClick={toggleMenu}
                     >
-                      Course Sessions
+                      Kursblöcke
                     </Link>
                   </li>
                   <li>
@@ -147,7 +147,7 @@ function App() {
                       to="/courses"
                       onClick={toggleMenu}
                     >
-                      Courses
+                      Kurse
                     </Link>
                   </li>
                   <li>
@@ -156,7 +156,7 @@ function App() {
                       to="/help"
                       onClick={toggleMenu}
                     >
-                      Help
+                      Hilfe
                     </Link>
                   </li>
                   <li>
