@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../assets/admin_dashboard.css"; // own CSS file
+import "../assets/admin_dashboard.css"; // Eigene CSS-Datei
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
@@ -63,7 +63,8 @@ const AdminDashboard = () => {
     }
   }, [API_URL]);
 
-  const createCourse = async () => {
+  const createCourse = async (e) => {
+    e.preventDefault();
     try {
       const token = localStorage.getItem("token");
       const courseResponse = await axios.post(`${API_URL}/courses`, newCourse, {
@@ -133,22 +134,24 @@ const AdminDashboard = () => {
   }, [fetchCourses, fetchCategories, fetchTeacher]);
 
   return (
-    <div className="container my-4">
-      <h1 className="text-center mb-4" style={{ color: "#034875" }}>
-        Admin Dashboard
-      </h1>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <button className="btn btn-danger mb-3" onClick={logout}>
-        Logout
-      </button>
-      <div className="table-responsive">
+    <div className="container mt-4" style={{ backgroundColor: "#034875" }}>
+      <header className="d-flex justify-content-between align-items-center p-3 text-white">
+        <h1>Admin-Dashboard</h1>
+        <button className="btn btn-light" onClick={logout}>
+          Abmelden
+        </button>
+      </header>
+
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
+
+      <div className="table-responsive mt-4">
         <table className="table table-striped">
-          <thead className="table-dark">
+          <thead className="bg-primary text-white">
             <tr>
               <th>ID</th>
-              <th>Category</th>
-              <th>Title</th>
-              <th>Options</th>
+              <th>Kategorie</th>
+              <th>Titel</th>
+              <th>Optionen</th>
             </tr>
           </thead>
           <tbody>
@@ -158,31 +161,30 @@ const AdminDashboard = () => {
                 <td>
                   {categories.find(
                     (cat) => cat.category_id === event.category_id
-                  )?.category_name || "Unknown"}
+                  )?.category_name || "Unbekannt"}
                 </td>
                 <td>
                   {event.title}
-                  <br />
-                  <small className="text-muted">
-                    {"Description: " + event.description}
+                  <div className="text-muted small">
+                    Beschreibung: {event.description}
                     <br />
-                    {"Max Participants: " + event.max_participants}
+                    Maximale Teilnehmer: {event.max_participants}
                     <br />
-                    {"Duration: " + event.duration + " hours"}
-                  </small>
+                    Dauer: {event.duration} Stunden
+                  </div>
                 </td>
                 <td>
                   <button
                     className="btn btn-primary btn-sm me-2"
                     onClick={() => navigate(`/admin/${event.course_id}`)}
                   >
-                    Edit
+                    Bearbeiten
                   </button>
                   <button
                     className="btn btn-danger btn-sm"
                     onClick={() => confirmDelete(event.course_id)}
                   >
-                    Delete
+                    Löschen
                   </button>
                 </td>
               </tr>
@@ -190,17 +192,18 @@ const AdminDashboard = () => {
           </tbody>
         </table>
       </div>
+
       <div className="card mt-5">
         <div className="card-body">
           <h2 className="card-title" style={{ color: "#034875" }}>
-            Add New Course
+            Neuen Kurs hinzufügen
           </h2>
           <form onSubmit={createCourse}>
             <div className="mb-3">
               <input
                 type="text"
                 className="form-control"
-                placeholder="Title"
+                placeholder="Titel"
                 value={newCourse.title}
                 onChange={(e) =>
                   setNewCourse({ ...newCourse, title: e.target.value })
@@ -211,7 +214,7 @@ const AdminDashboard = () => {
             <div className="mb-3">
               <textarea
                 className="form-control"
-                placeholder="Description"
+                placeholder="Beschreibung"
                 value={newCourse.description}
                 onChange={(e) =>
                   setNewCourse({ ...newCourse, description: e.target.value })
@@ -223,7 +226,7 @@ const AdminDashboard = () => {
               <input
                 type="number"
                 className="form-control"
-                placeholder="Max Participants"
+                placeholder="Maximale Teilnehmer"
                 value={newCourse.max_participants}
                 onChange={(e) =>
                   setNewCourse({
@@ -238,7 +241,7 @@ const AdminDashboard = () => {
               <input
                 type="number"
                 className="form-control"
-                placeholder="Duration (in hours)"
+                placeholder="Dauer (in Stunden)"
                 value={newCourse.duration}
                 onChange={(e) =>
                   setNewCourse({ ...newCourse, duration: e.target.value })
@@ -255,7 +258,7 @@ const AdminDashboard = () => {
                 }
                 required
               >
-                <option value="">Select Category</option>
+                <option value="">Kategorie auswählen</option>
                 {categories.map((category) => (
                   <option
                     key={category.category_id}
@@ -274,7 +277,7 @@ const AdminDashboard = () => {
                   onChange={(e) => updateTeacher(index, e.target.value)}
                   required
                 >
-                  <option value="">Select course teacher</option>
+                  <option value="">Kursleiter auswählen</option>
                   {teachers.map((dozent) => (
                     <option key={dozent.user_id} value={dozent.user_id}>
                       {dozent.prename + " " + dozent.surname}
@@ -285,12 +288,14 @@ const AdminDashboard = () => {
             ))}
             <button
               type="button"
-              className="btn btn-secondary btn-sm mb-3"
+              className="btn btn-secondary btn-primary mb-3"
               onClick={addTeacherField}
             >
-              Add further teacher
+              Kursleiter hinzufügen
             </button>
-            <button className="btn btn-success w-100">Create Course</button>
+            <button type="submit" className="btn btn-primary w-100">
+              Kurs erstellen
+            </button>
           </form>
         </div>
       </div>
