@@ -65,13 +65,13 @@ function ListView() {
             <li key={index} className="list-group-item mb-3">
               <h5 className="mb-2">{event.title}</h5>
               <p className="mb-1">
-                <strong>Teacher:</strong> {event.teacher}
+                <strong>Dozent:</strong> {event.teacher}
               </p>
               <p className="mb-1">
                 <strong>Start:</strong> {event.start}
               </p>
               <p className="mb-1">
-                <strong>End:</strong> {event.end}
+                <strong>Ende:</strong> {event.end}
               </p>
             </li>
           ))}

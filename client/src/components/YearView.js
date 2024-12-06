@@ -6,9 +6,8 @@ import "../assets/YearView.css";
 function YearView({ events, onMonthClick }) {
   // Berechnet die Monate im Jahr und teilt Events nach Monaten auf
   const months = Array.from({ length: 12 }, (_, i) => {
-    // Korrekte Erstellung des Monatsstarts
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), i + 1, 0); // Monat korrekt 0-basiert
+    const monthStart = new Date(now.getFullYear(), i + 1, 0);
     return monthStart; // Startdatum jedes Monats
   });
 
@@ -35,7 +34,7 @@ function YearView({ events, onMonthClick }) {
         >
           {/* Anzeige des Monats mit Jahr */}
           <h3>
-            {monthData.monthStart.toLocaleString("default", { month: "long" })}{" "}
+            {monthData.monthStart.toLocaleString("de-DE", { month: "long" })}{" "}
             {monthData.monthStart.getFullYear()}
           </h3>
           {/* FullCalendar für jeden Monat */}
@@ -45,7 +44,7 @@ function YearView({ events, onMonthClick }) {
             initialDate={monthData.monthStart.toISOString().split("T")[0]}
             aspectRatio={1}
             height={"auto"}
-            locale={"en"}
+            locale={"de"}
             contentHeight={1}
             dayMaxEventRows={2}
             moreLinkClick={"popover"}
