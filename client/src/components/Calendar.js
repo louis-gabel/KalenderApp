@@ -92,31 +92,31 @@ function Calendar() {
           className="btn btn-secondary mx-2"
           onClick={() => navigate("/list")}
         >
-          List
+          Liste
         </button>
         <button
           className="btn btn-secondary mx-2"
           onClick={() => setView("day")}
         >
-          Day
+          Tag
         </button>
         <button
           className="btn btn-secondary mx-2"
           onClick={() => setView("week")}
         >
-          Week
+          Woche
         </button>
         <button
           className="btn btn-secondary mx-2"
           onClick={() => setView("month")}
         >
-          Month
+          Monat
         </button>
         <button
           className="btn btn-secondary mx-2"
           onClick={() => setView("year")}
         >
-          Year
+          Jahr
         </button>
       </div>
 
