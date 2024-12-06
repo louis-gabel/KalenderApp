@@ -8,24 +8,29 @@ import axios from "axios";
 import YearView from "./YearView";
 
 function Calendar() {
-  const [view, setView] = useState("year"); // Aktive Ansicht (month, week, year)
+  const [view, setView] = useState("year"); // Aktive Ansicht
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("token"); // Token for authentication
+    const user_id = localStorage.getItem("id"); // User_ID for identification
 
+    
     // Daten von der API laden
     axios
-      .get(`${API_URL}/calendarevents`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get(`${API_URL}/calendar/calendarevents`
+        , {headers: { Authorization: `Bearer ${token}` },
+        params: { user_id }, // Query-Parameter für die User-ID
+        }
+     )
       .then((response) => {
         const loadedEvents = response.data.map((event) => ({
-          title: `Room ${event.room_id}`, // Nutze `room_id` als Titel
-          start: event.start_time, // Startzeit direkt verwenden
-          end: event.end_time, // Endzeit direkt verwenden
+          title: `${event.course_title}`,
+          start: event.start_time, 
+          end: event.end_time, 
+          roomName: event.room_name,
         }));
         setEvents(loadedEvents); // Events im State speichern
       })
@@ -66,7 +71,7 @@ function Calendar() {
             hour12: false, // 24-Stunden-Format
           }}
           dayHeaderFormat={{
-            weekday: "short", // Kürzer Wochentag (z.B. Mon, Tue)
+            weekday: "short", // Kurzer Wochentag (z.B. Mon, Tue)
             day: "2-digit", // Zweistelliges Datum
             month: "2-digit", // Zweistelliger Monat
           }}

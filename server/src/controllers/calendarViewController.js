@@ -4,7 +4,7 @@ const { getCalendarEvents } = require("../models/calendarViewModel");
 const fetchCalendarEvents = async (req, res) => {
   try {
     // Angemeldete Benutzer-ID aus der Anfrage (z. B. aus einem JWT-Token oder Header)
-    const userId = 7; //req.user?.id; // Falls JWT verwendet wird, passe die Quelle an
+    const userId = req.query.user_id;
         if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
