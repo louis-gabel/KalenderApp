@@ -20,6 +20,8 @@ import EditCourse from "./components/EditCourse";
 import DozentDashboard from "./components/DozentDashboard";
 import CreateCalendarevents from "./components/CreateCalendarevents";
 import "./assets/App.css";
+import "./bootstrap/css/bootstrap.min.css";
+import "./bootstrap/js/bootstrap.bundle.min.js"; // Optional für interaktive Komponenten
 
 const API = process.env.REACT_APP_API_URL;
 

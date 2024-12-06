@@ -1,77 +1,36 @@
-.admin-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+body {
+  background-color: #eee;
 }
 
-h1 {
-  text-align: center;
+.container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-dark {
+  background-color: #034875;
+}
+
+.table-dark th {
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: #034875;
+  border-color: #034875;
+}
+
+.btn-secondary {
+  background-color: #eee;
   color: #034875;
 }
 
-.error {
-  color: red;
-  text-align: center;
-}
-.event-category {
-  color: lightgray;
-}
-.events-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.card {
+  border: 1px solid #ddd;
 }
 
-.events-table th,
-.events-table td {
-  border: 1px solid #eee;
-  padding: 10px;
-  text-align: left;
-}
-
-.events-table th {
-  background-color: #034875;
-  color: #fff;
-}
-
-.events-table td button {
-  margin-right: 5px;
-  padding: 5px 10px;
-  background-color: #034875;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.events-table td button:hover {
-  background-color: #022b57;
-}
-
-.create-course-form {
-  margin-bottom: 20px;
-}
-
-.create-course-form input,
-.create-course-form textarea {
-  display: block;
-  margin: 10px 0;
-  padding: 10px;
-  width: 100%;
-  font-size: 16px;
-}
-
-.create-course-form button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.create-course-form button:hover {
-  background-color: #45a049;
+.card-title {
+  color: #034875;
 }
