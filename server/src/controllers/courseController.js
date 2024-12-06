@@ -1,4 +1,5 @@
 const courseModel = require("../models/courseModel");
+const db = require('../utils/db');
 
 const getCourses = async (req, res) => {
   try {
@@ -51,9 +52,41 @@ const deleteCourse = async (req, res) => {
   }
 };
 
+async function createCourseSession(req, res) {
+  const { course_id } = req.params; // Kurs-ID aus der URL
+  const { start_date, end_date } = req.body; // Start- und Enddatum aus dem Request-Body
+  const teacher_id = req.user.id; // Benutzer-ID des Dozenten aus dem authentifizierten Request
+
+  try {
+    // Prüfen, ob der Dozent mit dem Kurs verknüpft ist
+    const isAuthorized = await db('teachercourse')
+      .where({ course_id, teacher_id })
+      .first();
+
+    if (!isAuthorized) {
+      return res.status(403).json({ message: 'Nicht berechtigt, für diesen Kurs ein Event zu erstellen.' });
+    }
+
+    // CourseSession erstellen
+    await db('coursesession').insert({
+      course_id,
+      teacher_id,
+      start_date,
+      end_date,
+    });
+
+    return res.status(201).json({ message: 'CourseSession erfolgreich erstellt.' });
+  } catch (error) {
+    console.error('Fehler beim Erstellen der CourseSession:', error);
+    return res.status(500).json({ message: 'Interner Serverfehler.' });
+  }
+}
+
+
 module.exports = {
   getCourses,
   createCourse,
   updateCourse,
   deleteCourse,
+  createCourseSession
 };

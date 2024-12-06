@@ -14,8 +14,12 @@ function Calendar() {
 
   useEffect(() => {
     // Daten von der API laden
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/calendar/calendarevents")
+      .get("http://localhost:5000/api/calendar/calendarevents",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        })
       .then((response) => {
         const loadedEvents = response.data.map((event) => ({
           title: `Room ${event.room_id}`, // Nutze `room_id` als Titel

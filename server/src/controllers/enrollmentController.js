@@ -14,8 +14,8 @@ const getUpcomingSessions = async (req, res) => {
 // Anmeldung zu einem Kurs
 const enrollInSession = async (req, res) => {
   const { sessionId } = req.body; // Erwartet sessionId im Request-Body
-  const userId = 4 //req.user.id; // Erwartet User-ID aus einem Auth-Middleware-Token
-
+  // const userId = localStorage.getItem("id");
+  const userId = 12;
   try {
     const result = await enrollmentModel.enrollInSession(sessionId, userId);
     res.status(200).json(result);
@@ -27,8 +27,8 @@ const enrollInSession = async (req, res) => {
 
 // Abrufen aller Registrierungen eines Benutzers
 const getUserEnrollments = async (req, res) => {
-  const userId = 4 //req.user.id; // Erwartet User-ID aus einem Auth-Middleware-Token
-
+  // const userId = localStorage.getItem("id");
+  const userId = 12;
   try {
     const enrollments = await enrollmentModel.getUserEnrollments(userId);
     res.status(200).json(enrollments);
@@ -41,8 +41,8 @@ const getUserEnrollments = async (req, res) => {
 // Abmeldung von einem Kurs
 const withdrawFromSession = async (req, res) => {
   const { sessionId } = req.body; // Erwartet sessionId im Request-Body
-  const userId = 4 //req.user.id; // Erwartet User-ID aus einem Auth-Middleware-Token
-
+  // const userId = localStorage.getItem("id");
+  const userId = 12;
   try {
     const result = await enrollmentModel.withdrawFromSession(sessionId, userId);
     res.status(200).json(result);

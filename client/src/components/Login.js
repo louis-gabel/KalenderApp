@@ -30,11 +30,12 @@ const Login = () => {
     try {
       // Calls the loginUser function with email and password to authenticate the user
       const response = await loginUser({ email, password });
-      const { token, role } = response.data; // Destructures the token and role from the response
+      const { token, role, user_id } = response.data; // Destructures the token and role from the response
 
       // Stores the token and role in localStorage for future authenticated requests
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+      localStorage.setItem("id", user_id)
 
       // Redirects the user based on their role
       if (role === "Admin") {

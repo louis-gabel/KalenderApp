@@ -6,19 +6,24 @@ const CourseSessionList = () => {
   const [loading, setLoading] = useState(true);
 
   // Temporäre UserID, bis Authentifizierung implementiert ist
-  const TEMP_USER_ID = 4;
+  const TEMP_USER_ID = 12;
 
   // Base URL aus der .env-Datei
   const API_BASE_URL = process.env.REACT_APP_API_URL;
+  const token = localStorage.getItem("token");
 
   const getUpcomingSessions = useCallback(async () => {
-    const response = await axios.get(`${API_BASE_URL}/enrollment/upcoming`);
+    const response = await axios.get(`${API_BASE_URL}/enrollment/upcoming`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   }, [API_BASE_URL]);
 
   const getUserEnrollments = useCallback(async () => {
     const response = await axios.get(`${API_BASE_URL}/enrollment/my-enrollments`, {
       params: { userId: TEMP_USER_ID },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   }, [API_BASE_URL]);
@@ -27,6 +32,7 @@ const CourseSessionList = () => {
     const response = await axios.post(`${API_BASE_URL}/enrollment/enroll`, {
       sessionId,
       userId: TEMP_USER_ID,
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   };
@@ -35,6 +41,7 @@ const CourseSessionList = () => {
     const response = await axios.post(`${API_BASE_URL}/enrollment/withdraw`, {
       sessionId,
       userId: TEMP_USER_ID,
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   };
