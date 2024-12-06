@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../assets/admin_dashboard.css"; // own CSS file
+import "../assets/admin_dashboard.css"; // eigene CSS-Datei
 import EditCourse from "./EditCourse";
 
 const DozentDashboard = () => {
-  const [events, setEvents] = useState([]); // list of events
-  const [categories, setCategories] = useState([]); // list of categories
-  const [error, setError] = useState(""); // error message
-  const [editingCourse, setEditingCourse] = useState(null); // Course being edited
-  const [teachersCourses, setTeachersCourses] = useState([]); // All courses teacher can edit
-  const [courseSessions, setCourseSessions] = useState([]); // All sessions of a course
+  const [events, setEvents] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState("");
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [teachersCourses, setTeachersCourses] = useState([]);
+  const [courseSessions, setCourseSessions] = useState([]);
 
   const navigate = useNavigate();
 
@@ -19,27 +19,24 @@ const DozentDashboard = () => {
     teacher_id: "",
     start_date: "",
     end_date: "",
-  }); // new course data
+  });
 
-  // API URL
   const API_URL = process.env.REACT_APP_API_URL;
 
-  // Logout function
   const logout = () => {
-    localStorage.removeItem("token"); // Remove the token
-    navigate("/login"); // Redirect to login page
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   const fetchCourseSessions = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token"); // Token for authentication
-      const user_id = localStorage.getItem("id"); // User ID for authentication
+      const token = localStorage.getItem("token");
+      const user_id = localStorage.getItem("id");
 
       if (!token || !user_id) {
         throw new Error("Token oder User ID nicht gefunden.");
       }
 
-      // get all coursesessions of the dozent
       const coursesresponse = await axios.get(
         `${API_URL}/coursesessions/${user_id}`,
         {
@@ -54,14 +51,13 @@ const DozentDashboard = () => {
 
   const fetchCoursesForTeacher = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token"); // Token for authentication
-      const user_id = localStorage.getItem("id"); // User ID for authentication
+      const token = localStorage.getItem("token");
+      const user_id = localStorage.getItem("id");
 
       if (!token || !user_id) {
         throw new Error("Token oder User ID nicht gefunden.");
       }
 
-      // get all courses of the dozent
       const coursesresponse = await axios.get(
         `${API_URL}/teachercourse/courses/${user_id}`,
         {
@@ -76,11 +72,11 @@ const DozentDashboard = () => {
 
   const fetchCourses = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token"); // Token for authentication
+      const token = localStorage.getItem("token");
       const response = await axios.get(`${API_URL}/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setEvents(response.data); // Set loaded courses
+      setEvents(response.data);
     } catch (err) {
       setError("Error loading events.");
     }
@@ -88,11 +84,11 @@ const DozentDashboard = () => {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token"); // Token for authentication
+      const token = localStorage.getItem("token");
       const response = await axios.get(`${API_URL}/category`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCategories(response.data); // Set loaded categories
+      setCategories(response.data);
     } catch (err) {
       setError("Error loading categories.");
     }
@@ -150,31 +146,28 @@ const DozentDashboard = () => {
       });
       setCourseSessions(
         courseSessions.filter((session) => session.session_id !== session_id)
-      ); // Entferne die gelöschte Session aus dem Zustand
+      );
     } catch (err) {
       setError("Error deleting course session.");
     }
   };
 
-  // Confirmation before deleting a course
   const confirmDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       deleteCourseSession(id);
     }
   };
 
-  // Stop editing and return to dashboard view
   const stopEditing = () => {
-    setEditingCourse(null); // Reset editing state
-    fetchCourses(); // Refresh courses after editing
+    setEditingCourse(null);
+    fetchCourses();
   };
 
-  // Load courses on the first render of the component
   useEffect(() => {
-    fetchCoursesForTeacher(); // Load all courses dozent can teach
+    fetchCoursesForTeacher();
     fetchCourses();
-    fetchCategories(); // Load categories on render
-    fetchCourseSessions(); // Load coursesessions on render
+    fetchCategories();
+    fetchCourseSessions();
   }, [
     fetchCoursesForTeacher,
     fetchCourses,
@@ -183,35 +176,29 @@ const DozentDashboard = () => {
   ]);
 
   if (editingCourse) {
-    // Render EditCourse when editing
     return (
-      <div className="admin-container">
-        <EditCourse
-          course={editingCourse} // Pass the course to EditCourse
-          onCancel={stopEditing} // Callback to stop editing
-        />
+      <div className="container mt-4">
+        <EditCourse course={editingCourse} onCancel={stopEditing} />
       </div>
     );
   }
 
-  // render Dashboard view
   return (
-    <div className="admin-container">
-      {/* Header with Logout Button */}
-      <header className="admin-header">
-        <h1>Teacher Dashboard</h1>
-        <button className="logout-button" onClick={logout}>
-          Logout
+    <div className="container mt-4" style={{ backgroundColor: "#034875" }}>
+      <header className="d-flex justify-content-between align-items-center p-3 text-white">
+        <h1>Dozenten-Dashboard</h1>
+        <button className="btn btn-light" onClick={logout}>
+          Abmelden
         </button>
       </header>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="alert alert-danger mt-3">{error}</p>}
 
-      <table className="events-table">
-        <thead>
+      <table className="table table-striped mt-4">
+        <thead className="bg-primary text-white">
           <tr>
-            <th>Category</th>
-            <th>Title</th>
+            <th>Kategorie</th>
+            <th>Titel</th>
           </tr>
         </thead>
         <tbody>
@@ -222,7 +209,6 @@ const DozentDashboard = () => {
               )
             )
             .map((event) => {
-              // Filter the course sessions that belong to this event
               const courseSessionsForEvent = courseSessions.filter(
                 (session) => session.course_id === event.course_id
               );
@@ -232,47 +218,40 @@ const DozentDashboard = () => {
                   <td>
                     {categories.find(
                       (cat) => cat.category_id === event.category_id
-                    )?.category_name || "Unknown"}
+                    )?.category_name || "Unbekannt"}
                   </td>
                   <td>
                     {event.title}
-                    <br />
-                    <span className="event-category">
-                      {"Description: " + event.description}
+                    <div className="text-muted small mt-1">
+                      Beschreibung: {event.description}
                       <br />
-                      {"Max Participants: " + event.max_participants}
+                      Maximale Teilnehmer: {event.max_participants}
                       <br />
-                      {"Duration: " + event.duration + " hours"}
-                    </span>
-
-                    {/* Nested Sessions under the event */}
-                    <div className="sessions-list">
-                      {courseSessionsForEvent.length > 0 ? (
-                        <ul>
-                          {courseSessionsForEvent.map((session) => (
-                            <li key={session.session_id}>
-                              <strong>Session {session.session_id}</strong>
-                              <br />
-                              Start:{" "}
-                              {new Date(session.start_date).toLocaleString()}
-                              <br />
-                              End: {new Date(session.end_date).toLocaleString()}
-                              <br />
-                              {/* Button zum Löschen der Session */}
-                              <button
-                                onClick={() =>
-                                  confirmDelete(session.session_id)
-                                }
-                                className="delete-button"
-                              >
-                                Delete Session
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p>No sessions available for this course.</p>
-                      )}
+                      Dauer: {event.duration} Stunden
+                    </div>
+                    <div className="mt-3">
+                      {courseSessionsForEvent.map((session) => (
+                        <div
+                          key={session.session_id}
+                          className="border rounded p-2 mb-2"
+                        >
+                          <p className="mb-1">
+                            <strong>Sitzung {session.session_id}</strong>
+                          </p>
+                          <p className="mb-1">
+                            Start:{" "}
+                            {new Date(session.start_date).toLocaleString()}
+                            <br />
+                            Ende: {new Date(session.end_date).toLocaleString()}
+                          </p>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => confirmDelete(session.session_id)}
+                          >
+                            Sitzung löschen
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   </td>
                 </tr>
@@ -281,44 +260,42 @@ const DozentDashboard = () => {
         </tbody>
       </table>
 
-      {/* Form for adding a new course session */}
-      <div className="create-course-form">
-        <h2>Add New Course Session</h2>
+      <div className="bg-light p-4 rounded mt-4">
+        <h2>Neue Kurssitzung hinzufügen</h2>
         <form onSubmit={createCourseSession}>
-          {/* Dropdown for courses */}
-          <select
-            value={newCourseSession.course_id}
-            onChange={(e) =>
-              setNewCourseSession({
-                ...newCourseSession,
-                course_id: e.target.value,
-              })
-            }
-            required
-          >
-            <option value="">Select Course</option>
-
-            {events
-              .filter((event) =>
-                teachersCourses.some(
-                  (teacherCourse) => teacherCourse.course_id === event.course_id
+          <div className="mb-3">
+            <label className="form-label">Kurs auswählen</label>
+            <select
+              className="form-select"
+              value={newCourseSession.course_id}
+              onChange={(e) =>
+                setNewCourseSession({
+                  ...newCourseSession,
+                  course_id: e.target.value,
+                })
+              }
+              required
+            >
+              <option value="">Kurs auswählen</option>
+              {events
+                .filter((event) =>
+                  teachersCourses.some(
+                    (teacherCourse) =>
+                      teacherCourse.course_id === event.course_id
+                  )
                 )
-              )
-              .map((event) => {
-                // Filter the course sessions that belong to this event
-                return (
+                .map((event) => (
                   <option key={event.course_id} value={event.course_id}>
                     {event.title}
                   </option>
-                );
-              })}
-          </select>
-
-          {/* Start and End Date for Course Session */}
-          <label>
-            Start Date:
+                ))}
+            </select>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Startdatum</label>
             <input
               type="datetime-local"
+              className="form-control"
               value={newCourseSession.start_date}
               onChange={(e) =>
                 setNewCourseSession({
@@ -328,12 +305,12 @@ const DozentDashboard = () => {
               }
               required
             />
-          </label>
-
-          <label>
-            End Date:
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Enddatum</label>
             <input
               type="datetime-local"
+              className="form-control"
               value={newCourseSession.end_date}
               onChange={(e) =>
                 setNewCourseSession({
@@ -343,9 +320,10 @@ const DozentDashboard = () => {
               }
               required
             />
-          </label>
-
-          <button type="submit">Create Course Session</button>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Kurssitzung erstellen
+          </button>
         </form>
       </div>
     </div>

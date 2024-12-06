@@ -22,7 +22,7 @@ const EditCourse = () => {
       });
       setCourse(response.data);
     } catch (err) {
-      setError("Error loading course details.");
+      setError("Fehler beim Laden der Kursdetails.");
     }
   }, [API_URL, courseId]);
 
@@ -40,7 +40,7 @@ const EditCourse = () => {
         response.data.map((teacher) => teacher.teacher_course_id)
       );
     } catch (err) {
-      setError("Error loading selected teacher details.");
+      setError("Fehler beim Laden der Lehrerdetails.");
     }
   }, [API_URL, courseId]);
 
@@ -52,7 +52,7 @@ const EditCourse = () => {
       });
       setCategories(response.data);
     } catch (err) {
-      setError("Error loading categories.");
+      setError("Fehler beim Laden der Kategorien.");
     }
   }, [API_URL]);
 
@@ -64,7 +64,7 @@ const EditCourse = () => {
       });
       setTeachers(response.data);
     } catch (err) {
-      setError("Error loading teachers.");
+      setError("Fehler beim Laden der Lehrer.");
     }
   }, [API_URL]);
 
@@ -112,7 +112,7 @@ const EditCourse = () => {
       // Successfully updated
       navigate("/admin");
     } catch (err) {
-      setError("Error updating course.");
+      setError("Fehler beim Aktualisieren des Kurses.");
     }
   };
 
@@ -133,24 +133,27 @@ const EditCourse = () => {
     fetchSelectedTeachers();
   }, [fetchCourse, fetchCategories, fetchTeachers, fetchSelectedTeachers]);
 
-  if (!course) return <p>Loading...</p>;
+  if (!course) return <p>Laden...</p>;
 
   return (
-    <div className="edit-course-container">
-      <h1>Edit Course </h1>
+    <div
+      className="container mt-4 edit-course-container"
+      style={{ backgroundColor: "#eee" }}
+    >
+      <h1>Kurs bearbeiten</h1>
       {error && <p className="error">{error}</p>}
-      <button onClick={() => navigate("/admin")}>CancelEdit</button>
+      <button onClick={() => navigate("/admin")}>Abbrechen</button>
 
       <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Titel"
           value={course.title}
           onChange={(e) => setCourse({ ...course, title: e.target.value })}
           required
         />
         <textarea
-          placeholder="Description"
+          placeholder="Beschreibung"
           value={course.description}
           onChange={(e) =>
             setCourse({ ...course, description: e.target.value })
@@ -159,7 +162,7 @@ const EditCourse = () => {
         />
         <input
           type="number"
-          placeholder="Max Participants"
+          placeholder="Maximale Teilnehmer"
           value={course.max_participants}
           onChange={(e) =>
             setCourse({ ...course, max_participants: e.target.value })
@@ -168,7 +171,7 @@ const EditCourse = () => {
         />
         <input
           type="number"
-          placeholder="Duration (in hours)"
+          placeholder="Dauer (in Stunden)"
           value={course.duration}
           onChange={(e) => setCourse({ ...course, duration: e.target.value })}
           required
@@ -180,7 +183,7 @@ const EditCourse = () => {
           }
           required
         >
-          <option value="">Select Category</option>
+          <option value="">Kategorie auswählen</option>
           {categories.map((category) => (
             <option key={category.category_id} value={category.category_id}>
               {category.category_name}
@@ -194,7 +197,7 @@ const EditCourse = () => {
             onChange={(e) => updateTeacher(index, e.target.value)}
             required
           >
-            <option value="">Select course teacher</option>
+            <option value="">Kurslehrer auswählen</option>
             {teachers.map((dozent) => (
               <option key={dozent.user_id} value={dozent.user_id}>
                 {dozent.prename + " " + dozent.surname}
@@ -203,10 +206,10 @@ const EditCourse = () => {
           </select>
         ))}
         <button type="button" onClick={addTeacherField}>
-          Add further teacher
+          Weiteren Lehrer hinzufügen
         </button>
 
-        <button onClick={updateCourse}>Update Course</button>
+        <button onClick={updateCourse}>Kurs aktualisieren</button>
       </form>
     </div>
   );

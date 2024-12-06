@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import "../assets/admin_dashboard.css";
 
 const AddCalendarEvents = () => {
   const { sessionId } = useParams(); // ID der Session aus der URL
@@ -19,7 +20,7 @@ const AddCalendarEvents = () => {
       });
       setRooms(response.data); // Set loaded courses
     } catch (err) {
-      setError("Error loading events.");
+      setError("Fehler beim Laden der Räume.");
     }
   }, [API_URL]);
 
@@ -52,7 +53,7 @@ const AddCalendarEvents = () => {
         (event) => event.start_time && event.end_time && event.room_id
       )
     ) {
-      alert("Please fill out all fields before submitting.");
+      alert("Bitte füllen Sie alle Felder aus, bevor Sie absenden.");
       return;
     }
 
@@ -89,10 +90,10 @@ const AddCalendarEvents = () => {
         })
       );
 
-      alert("All calendar events created successfully!");
+      alert("Alle Kalendereinträge wurden erfolgreich erstellt!");
     } catch (error) {
-      console.error("Error creating calendar events:", error);
-      alert("An error occurred while creating events.");
+      console.error("Fehler beim Erstellen der Kalendereinträge:", error);
+      alert("Beim Erstellen der Einträge ist ein Fehler aufgetreten.");
     }
   };
 
@@ -102,62 +103,82 @@ const AddCalendarEvents = () => {
   }, [fetchRooms]);
 
   return (
-    <div className="add-events-container">
-      <h1>Add Days for Session {sessionId}</h1>
+    <div
+      className="container mt-4 edit-course-container add-events-container"
+      style={{ backgroundColor: "#eee" }}
+    >
+      <h1>Tage für Session {sessionId} hinzufügen</h1>
       {error && <p className="error">{error}</p>}
 
       {/* Liste der zu erstellenden Events */}
       <div className="events-list">
         {eventsData.map((event, index) => (
-          <div key={index} className="event-form">
-            <h3>Session Day {index + 1}</h3>
-            <label>
-              Date & Start Time:
+          <div
+            key={index}
+            className="event-form mb-4 p-3"
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <h3 style={{ color: "#034875" }}>Session Tag {index + 1}</h3>
+            <div className="mb-3">
+              <label className="form-label">Datum & Startzeit:</label>
               <input
-                type="date"
+                type="datetime-local"
+                className="form-control"
                 value={event.start_time}
                 onChange={(e) =>
                   updateEvent(index, "start_time", e.target.value)
                 }
               />
-            </label>
-            <label>
-              End Time:
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Endzeit:</label>
               <input
                 type="time"
+                className="form-control"
                 value={event.end_time}
                 onChange={(e) => updateEvent(index, "end_time", e.target.value)}
               />
-            </label>
-
-            {/* Dropdown for rooms */}
-            <select
-              value={rooms.room_id}
-              onChange={(e) => updateEvent(index, "room_id", e.target.value)}
-              required
-            >
-              <option value="">Select Room</option>
-
-              {rooms.map((room) => {
-                // Filter the course sessions that belong to this event
-                return (
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Raum auswählen:</label>
+              <select
+                className="form-select"
+                value={event.room_id}
+                onChange={(e) => updateEvent(index, "room_id", e.target.value)}
+                required
+              >
+                <option value="">Raum auswählen</option>
+                {rooms.map((room) => (
                   <option key={room.room_id} value={room.room_id}>
                     {room.room_name}
                   </option>
-                );
-              })}
-            </select>
-            <button onClick={() => removeEvent(index)}>Remove</button>
+                ))}
+              </select>
+            </div>
+            <button
+              className="btn btn-danger w-100"
+              onClick={() => removeEvent(index)}
+            >
+              Entfernen
+            </button>
           </div>
         ))}
       </div>
 
       {/* Buttons */}
-      <div className="actions">
-        <div>
-          <button onClick={addNewEvent}>Add new day for session</button>
-          <button onClick={handleSubmit}>Submit All Events</button>
-        </div>
+      <div className="actions d-flex justify-content-between mt-4">
+        <button className="btn btn-secondary" onClick={addNewEvent}>
+          Neuen Tag für Session hinzufügen
+        </button>
+      </div>
+      <div className="actions d-flex justify-content-between mt-4">
+        <button className="btn btn-primary" onClick={handleSubmit}>
+          Alle Events absenden
+        </button>
       </div>
     </div>
   );
