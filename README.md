@@ -1,45 +1,50 @@
 # KalenderApp
-A simple application for displaying and managing seminars, built with a Node.js REST API, a MariaDB database, and a React frontend.
 
-## Prerequisites
-Ensure the following software is installed:
-- [Node.js](https://nodejs.org/) (version 14 or higher)
-- [MariaDB](https://mariadb.org/) 
-- [npm](https://www.npmjs.com/) (npm is a Package manager for the JavaScript runtime environment Node.js)
+Eine Anwendung zur Anzeige und Verwaltung von Seminaren, basierend auf einer Node.js REST-API, einer MariaDB-Datenbank und einem React-Frontend.
+
+## Voraussetzungen
+
+Stelle sicher, dass die folgende Software installiert ist::
+
+- [Node.js](https://nodejs.org/) (version 14 oder höher)
+- [MariaDB](https://mariadb.org/)
+- [npm](https://www.npmjs.com/) (npm ist ein Paketmanager für die JavaScript-Laufzeitumgebung Node.js)
 
 ---
 
 ## Installation
 
-### 1. Clone the Repository
+### 1. Repository klonen
+
 ```bash
 git clone <repository-url>
 ```
-## How to setup a test database for developing the backend
-### Setting Up a Test Database with Knex and MariaDB
-#### Prerequisites
-Ensure the following software is installed:
-- [Node.js](https://nodejs.org/) (version 14 or higher)
-- [MariaDB](https://mariadb.org/) 
-- Knex: 
-```bash 
-npm install knex 
-```
-Adapt the passworts in the files to your locally db-root passwort:
-- database_setup.js
-- knexfile.js
-Follow this steps to create a test database:
-1. Create a test db with running the database_setup.js: 
+
+## Aufsetzen der MariaDB Datenbank
+
+Folge diesen Schritten, um die Datenbank zu erstellen:
+
+1. Passe die Passwörter in den .env-Dateien an das root-Passwort der lokalen Datenbank an.
+2. Lade die SQL-Dump-Datei herunter.
+3. Starte die HeidiSQL (oder einen anderen Verbindungsmanager).
+4. Stelle eine Verbindung mit MariaDB.
+5. Klicke auf Datei -> SQL-Datei laden -> wähle den SQL-Dump aus.
+6. Führe den SQL-Dump aus.
+
+### Alle Module installieren
+
+1. Öffne ein Terminal im Projektordner.
+2. Führe aus:
+
 ```bash
-node database_setup.js
+npm run install-all
 ```
-2. Use Knex migrations to create the database tables:
+
+### App starten
+
+1. Öffne ein Terminal im Projektordner.
+2. Führe aus:
+
 ```bash
-npx knex migrate:latest --env development
+npm start
 ```
-3. Insert testdata with seeds:
-```bash
-npx knex seed:run --env development
-```
-### Starting the test REST-API
-Go to package.json and start debugging or start debugging over VSC (launch.json needed, create file with help of VSC). 
